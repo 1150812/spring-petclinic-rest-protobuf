@@ -15,24 +15,17 @@
  */
 package org.springframework.samples.petclinic.rest.controller;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.mapper.SpecialtyMapper;
-import org.springframework.samples.petclinic.mapper.VetMapper;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.rest.api.VetsApi;
+import org.springframework.samples.petclinic.protobuf.*;
 import org.springframework.samples.petclinic.rest.dto.VetDto;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Vitaliy Fedoriv
@@ -40,79 +33,124 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("api")
-public class VetRestController implements VetsApi {
+public class VetRestController {
 
     private final ClinicService clinicService;
-    private final VetMapper vetMapper;
-    private final SpecialtyMapper specialtyMapper;
 
-    public VetRestController(ClinicService clinicService, VetMapper vetMapper, SpecialtyMapper specialtyMapper) {
+    public VetRestController(ClinicService clinicService) {
         this.clinicService = clinicService;
-        this.vetMapper = vetMapper;
-        this.specialtyMapper = specialtyMapper;
     }
 
-    @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Override
-    public ResponseEntity<List<VetDto>> listVets() {
-        List<VetDto> vets = new ArrayList<>();
-        vets.addAll(vetMapper.toVetDtos(this.clinicService.findAllVets()));
+    @RequestMapping("listVets")
+    public ResponseEntity<ProtoVets> listVets() {
+        List<Vet> vets = new ArrayList<>(this.clinicService.findAllVets());
+
         if (vets.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(vets, HttpStatus.OK);
+
+        List<ProtoVet> collection = new ArrayList<>();
+
+        for (Vet vet : vets) {
+
+            List<ProtoSpecialty> collection2 = new ArrayList<>();
+
+            for (Specialty s : vet.getSpecialties()) {
+                ProtoSpecialty vProto = ProtoSpecialty.newBuilder().setId(s.getId()).setName(s.getName()).build();
+                collection2.add(vProto);
+            }
+
+            ProtoVet vetProto = ProtoVet.newBuilder().setId(vet.getId()).setFirstName(vet.getFirstName()).setLastName(vet.getLastName())
+                .addAllSpecialties(collection2).build();
+
+            collection.add(vetProto);
+
+        }
+
+        ProtoVets protoVets = ProtoVets.newBuilder().addAllVets(collection).build();
+
+        return new ResponseEntity<>(protoVets, HttpStatus.OK);
+
     }
 
-    @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Override
-    public ResponseEntity<VetDto> getVet(Integer vetId)  {
+    @RequestMapping("getVet/{vetId}")
+    public ResponseEntity<ProtoVet> getVet(@PathVariable ("vetId") Integer vetId)  {
         Vet vet = this.clinicService.findVetById(vetId);
         if (vet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(vetMapper.toVetDto(vet), HttpStatus.OK);
+
+        List<ProtoSpecialty> collection = new ArrayList<>();
+
+        for (Specialty s : vet.getSpecialties()) {
+            ProtoSpecialty vProto = ProtoSpecialty.newBuilder().setId(s.getId()).setName(s.getName()).build();
+            collection.add(vProto);
+        }
+
+        ProtoVet vetProto = ProtoVet.newBuilder().setId(vet.getId()).setFirstName(vet.getFirstName()).setLastName(vet.getLastName())
+            .addAllSpecialties(collection).build();
+
+        return new ResponseEntity<>(vetProto, HttpStatus.OK);
+
     }
 
-    @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Override
-    public ResponseEntity<VetDto> addVet(VetDto vetDto) {
-        HttpHeaders headers = new HttpHeaders();
-        Vet vet = vetMapper.toVet(vetDto);
-        if(vet.getNrOfSpecialties() > 0){
-            List<Specialty> vetSpecialities = this.clinicService.findSpecialtiesByNameIn(vet.getSpecialties().stream().map(Specialty::getName).collect(Collectors.toSet()));
-            vet.setSpecialties(vetSpecialities);
-        }
-        this.clinicService.saveVet(vet);
-        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/vets/{id}").buildAndExpand(vet.getId()).toUri());
-        return new ResponseEntity<>(vetMapper.toVetDto(vet), headers, HttpStatus.CREATED);
-    }
+//    @PostMapping (value = "addVet", consumes = "application/x-protobuf", produces = "application/x-protobuf")
+//    public ResponseEntity<ProtoVet> addVet(@RequestBody ProtoVetAdd vetProtoAdd) {
+//
+//        Vet vet = new Vet();
+//        vet.setFirstName(vetProtoAdd.getFirstName());
+//        vet.setLastName(vetProtoAdd.getLastName());
+//
+//        for (ProtoSpecialty ps : vetProtoAdd.getSpecialtiesList()) {
+//
+//            for(Specialty s: this.clinicService.findAllSpecialties()) {
+//
+//                if(this.clinicService.findSpec
+//
+//            }
+//            Specialty spec = new Specialty();
+//            spec.setName(s.getName());
+//            vet.addSpecialty(spec);
+//
+//        }
+//
+//        List<ProtoSpecialty> collection = new ArrayList<>();
+//
+//        for (Specialty s : vet.getSpecialties()) {
+//            ProtoSpecialty vProto = ProtoSpecialty.newBuilder().setId(s.getId()).setName(s.getName()).build();
+//            collection.add(vProto);
+//        }
+//
+//        ProtoVet vetProto = ProtoVet.newBuilder().setId(vet.getId()).setFirstName(vet.getFirstName()).setLastName(vet.getLastName())
+//            .addAllSpecialties(collection).build();
+//
+//        this.clinicService.saveVet(vet);
+//        return new ResponseEntity<>(vetProto, HttpStatus.CREATED);
+//    }
 
-    @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Override
-    public ResponseEntity<VetDto> updateVet(Integer vetId,VetDto vetDto)  {
-        Vet currentVet = this.clinicService.findVetById(vetId);
-        if (currentVet == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        currentVet.setFirstName(vetDto.getFirstName());
-        currentVet.setLastName(vetDto.getLastName());
-        currentVet.clearSpecialties();
-        for (Specialty spec : specialtyMapper.toSpecialtys(vetDto.getSpecialties())) {
-            currentVet.addSpecialty(spec);
-        }
-        if(currentVet.getNrOfSpecialties() > 0){
-            List<Specialty> vetSpecialities = this.clinicService.findSpecialtiesByNameIn(currentVet.getSpecialties().stream().map(Specialty::getName).collect(Collectors.toSet()));
-            currentVet.setSpecialties(vetSpecialities);
-        }
-        this.clinicService.saveVet(currentVet);
-        return new ResponseEntity<>(vetMapper.toVetDto(currentVet), HttpStatus.NO_CONTENT);
-    }
+//    @PreAuthorize("hasRole(@roles.VET_ADMIN)")
+//    @Override
+//    public ResponseEntity<VetDto> updateVet(Integer vetId,VetDto vetDto)  {
+//        Vet currentVet = this.clinicService.findVetById(vetId);
+//        if (currentVet == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        currentVet.setFirstName(vetDto.getFirstName());
+//        currentVet.setLastName(vetDto.getLastName());
+//        currentVet.clearSpecialties();
+//        for (Specialty spec : specialtyMapper.toSpecialtys(vetDto.getSpecialties())) {
+//            currentVet.addSpecialty(spec);
+//        }
+//        if(currentVet.getNrOfSpecialties() > 0){
+//            List<Specialty> vetSpecialities = this.clinicService.findSpecialtiesByNameIn(currentVet.getSpecialties().stream().map(Specialty::getName).collect(Collectors.toSet()));
+//            currentVet.setSpecialties(vetSpecialities);
+//        }
+//        this.clinicService.saveVet(currentVet);
+//        return new ResponseEntity<>(vetMapper.toVetDto(currentVet), HttpStatus.NO_CONTENT);
+//    }
 
-    @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Transactional
-    @Override
-    public ResponseEntity<VetDto> deleteVet(Integer vetId) {
+    @DeleteMapping("deleteVet/{vetId}")
+    public ResponseEntity<VetDto> deleteVet(@PathVariable ("vetId") Integer vetId) {
         Vet vet = this.clinicService.findVetById(vetId);
         if (vet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

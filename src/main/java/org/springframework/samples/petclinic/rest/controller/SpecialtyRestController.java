@@ -16,19 +16,13 @@
 
 package org.springframework.samples.petclinic.rest.controller;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.mapper.SpecialtyMapper;
 import org.springframework.samples.petclinic.model.Specialty;
-import org.springframework.samples.petclinic.rest.api.SpecialtiesApi;
-import org.springframework.samples.petclinic.rest.dto.SpecialtyDto;
+import org.springframework.samples.petclinic.protobuf.*;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,65 +32,82 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("api")
-public class SpecialtyRestController implements SpecialtiesApi {
+public class SpecialtyRestController {
 
     private final ClinicService clinicService;
 
-    private final SpecialtyMapper specialtyMapper;
 
-    public SpecialtyRestController(ClinicService clinicService, SpecialtyMapper specialtyMapper) {
+    public SpecialtyRestController(ClinicService clinicService) {
         this.clinicService = clinicService;
-        this.specialtyMapper = specialtyMapper;
     }
 
-    @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Override
-    public ResponseEntity<List<SpecialtyDto>> listSpecialties() {
-        List<SpecialtyDto> specialties = new ArrayList<>();
-        specialties.addAll(specialtyMapper.toSpecialtyDtos(this.clinicService.findAllSpecialties()));
+    @RequestMapping("listSpecialties")
+    public ResponseEntity<ProtoSpecialties> listSpecialties() {
+
+        List<Specialty> specialties = new ArrayList<>(this.clinicService.findAllSpecialties());
+
         if (specialties.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(specialties, HttpStatus.OK);
+
+        List<ProtoSpecialty> collection = new ArrayList<>();
+
+        for (Specialty specialty : specialties) {
+            ProtoSpecialty specialtyProto = ProtoSpecialty.newBuilder().setId(specialty.getId()).setName(specialty.getName()).build();
+            collection.add(specialtyProto);
+        }
+
+        ProtoSpecialties ls = ProtoSpecialties.newBuilder().addAllSpecialties(collection).build();
+
+        return new ResponseEntity<>(ls, HttpStatus.OK);
+
     }
 
-    @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Override
-    public ResponseEntity<SpecialtyDto> getSpecialty(Integer specialtyId) {
+    @RequestMapping("getSpecialty/{specialtyId}")
+    public ResponseEntity<ProtoSpecialty> getSpecialty(@PathVariable("specialtyId") Integer specialtyId) {
         Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
+
         if (specialty == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(specialtyMapper.toSpecialtyDto(specialty), HttpStatus.OK);
+
+        ProtoSpecialty specialtyProto = ProtoSpecialty.newBuilder().setId(specialty.getId()).setName(specialty.getName()).build();
+
+        return new ResponseEntity<>(specialtyProto, HttpStatus.OK);
+
     }
 
-    @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Override
-    public ResponseEntity<SpecialtyDto> addSpecialty(SpecialtyDto specialtyDto) {
-        HttpHeaders headers = new HttpHeaders();
-        Specialty specialty = specialtyMapper.toSpecialty(specialtyDto);
+    @PostMapping (value = "addSpecialty")
+    public ResponseEntity<ProtoSpecialty> addSpecialty(@RequestBody ProtoSpecialtyAdd specialtyProtoAdd) {
+
+        Specialty specialty = new Specialty();
+        specialty.setName(specialtyProtoAdd.getName());
         this.clinicService.saveSpecialty(specialty);
-        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/specialties/{id}").buildAndExpand(specialty.getId()).toUri());
-        return new ResponseEntity<>(specialtyMapper.toSpecialtyDto(specialty), headers, HttpStatus.CREATED);
+
+        ProtoSpecialty specialtyProto = ProtoSpecialty.newBuilder().setId(specialty.getId()).setName(specialty.getName()).build();
+
+        return new ResponseEntity<>(specialtyProto, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Override
-    public ResponseEntity<SpecialtyDto> updateSpecialty(Integer specialtyId, SpecialtyDto specialtyDto) {
+    @PutMapping("updateSpecialty/{specialtyId}")
+    public ResponseEntity<ProtoSpecialty> updateSpecialty(@PathVariable ("specialtyId") Integer specialtyId, @RequestBody ProtoSpecialtyAdd protoAdd) {
+
         Specialty currentSpecialty = this.clinicService.findSpecialtyById(specialtyId);
         if (currentSpecialty == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        currentSpecialty.setName(specialtyDto.getName());
+
+        currentSpecialty.setName(protoAdd.getName());
         this.clinicService.saveSpecialty(currentSpecialty);
-        return new ResponseEntity<>(specialtyMapper.toSpecialtyDto(currentSpecialty), HttpStatus.NO_CONTENT);
+
+        ProtoSpecialty specialtyProto = ProtoSpecialty.newBuilder().setId(currentSpecialty.getId()).setName(currentSpecialty.getName()).build();
+
+        return new ResponseEntity<>(specialtyProto, HttpStatus.OK);
+
     }
 
-    @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Transactional
-    @Override
-    public ResponseEntity<SpecialtyDto> deleteSpecialty(Integer specialtyId) {
+    @DeleteMapping("deleteSpecialty/{specialtyId}")
+    public ResponseEntity<ProtoSpecialty> deleteSpecialty(@PathVariable("specialtyId") Integer specialtyId) {
         Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
         if (specialty == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

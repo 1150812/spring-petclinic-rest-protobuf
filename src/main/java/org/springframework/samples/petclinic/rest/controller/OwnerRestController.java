@@ -16,27 +16,20 @@
 
 package org.springframework.samples.petclinic.rest.controller;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.mapper.OwnerMapper;
-import org.springframework.samples.petclinic.mapper.PetMapper;
-import org.springframework.samples.petclinic.mapper.VisitMapper;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Visit;
-import org.springframework.samples.petclinic.rest.api.OwnersApi;
-import org.springframework.samples.petclinic.rest.dto.*;
+import org.springframework.samples.petclinic.protobuf.*;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -46,84 +39,123 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("/api")
-public class OwnerRestController implements OwnersApi {
+public class OwnerRestController {
 
     private final ClinicService clinicService;
 
-    private final OwnerMapper ownerMapper;
-
-    private final PetMapper petMapper;
-
-    private final VisitMapper visitMapper;
-
-    public OwnerRestController(ClinicService clinicService,
-                               OwnerMapper ownerMapper,
-                               PetMapper petMapper,
-                               VisitMapper visitMapper) {
+    public OwnerRestController(ClinicService clinicService) {
         this.clinicService = clinicService;
-        this.ownerMapper = ownerMapper;
-        this.petMapper = petMapper;
-        this.visitMapper = visitMapper;
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<List<OwnerDto>> listOwners(String lastName) {
+    @RequestMapping("listOwners")
+    public ResponseEntity<ProtoOwners> listOwners(@RequestBody ProtoOwnerFindByName lastName) {
         Collection<Owner> owners;
-        if (lastName != null) {
-            owners = this.clinicService.findOwnerByLastName(lastName);
+        if (!lastName.getLastName().equals("")) {
+            owners = this.clinicService.findOwnerByLastName(lastName.getLastName());
         } else {
             owners = this.clinicService.findAllOwners();
         }
         if (owners.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(ownerMapper.toOwnerDtoCollection(owners), HttpStatus.OK);
+
+        List<ProtoOwner> collection = new ArrayList<>();
+
+        for (Owner owner : owners) {
+
+            List<ProtoOwnerPet> collection2 = new ArrayList<>();
+
+            for (Pet p : owner.getPets()) {
+
+                ProtoOwnerPet protoOwnerPet = ProtoOwnerPet.newBuilder().setId(p.getId()).setName(p.getName()).setPetType(p.getType().getName()).
+                    setBirthDate((p.getBirthDate().toString())).build();
+
+                collection2.add(protoOwnerPet);
+
+            }
+
+            ProtoOwner pOwner = ProtoOwner.newBuilder().setId(owner.getId()).setFirstName(owner.getFirstName()).
+                setLastName(owner.getLastName()).setAddress(owner.getAddress()).setCity(owner.getCity()).setTelephone(owner.getTelephone()).
+                addAllPets(collection2).build();
+
+            collection.add(pOwner);
+        }
+
+        ProtoOwners protoOwners = ProtoOwners.newBuilder().addAllOwners(collection).build();
+
+        return new ResponseEntity<>(protoOwners, HttpStatus.OK);
+
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<OwnerDto> getOwner(Integer ownerId) {
+    @RequestMapping("getOwner/{ownerId}")
+    public ResponseEntity<ProtoOwner> getOwner(@PathVariable("ownerId") Integer ownerId) {
         Owner owner = this.clinicService.findOwnerById(ownerId);
         if (owner == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(ownerMapper.toOwnerDto(owner), HttpStatus.OK);
+
+        List<ProtoOwnerPet> collection = new ArrayList<>();
+
+        for (Pet p : owner.getPets()) {
+
+            ProtoOwnerPet protoOwnerPet = ProtoOwnerPet.newBuilder().setId(p.getId()).setName(p.getName()).setPetType(p.getType().getName()).
+                setBirthDate((p.getBirthDate().toString())).build();
+
+            collection.add(protoOwnerPet);
+
+        }
+
+        ProtoOwner pOwner = ProtoOwner.newBuilder().setId(owner.getId()).setFirstName(owner.getFirstName()).
+            setLastName(owner.getLastName()).setAddress(owner.getAddress()).setCity(owner.getCity()).setTelephone(owner.getTelephone()).
+            addAllPets(collection).build();
+
+        return new ResponseEntity<>(pOwner, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<OwnerDto> addOwner(OwnerFieldsDto ownerFieldsDto) {
-        HttpHeaders headers = new HttpHeaders();
-        Owner owner = ownerMapper.toOwner(ownerFieldsDto);
+    @PostMapping (value = "addOwner", consumes = "application/x-protobuf", produces = "application/x-protobuf")
+    public ResponseEntity<ProtoOwner> addOwner(@RequestBody ProtoOwner protoOwner) {
+
+        Owner owner = new Owner();
+
+        owner.setFirstName(protoOwner.getFirstName());
+        owner.setLastName(protoOwner.getLastName());
+        owner.setAddress(protoOwner.getAddress());
+        owner.setCity(protoOwner.getCity());
+        owner.setTelephone(protoOwner.getTelephone());
+
         this.clinicService.saveOwner(owner);
-        OwnerDto ownerDto = ownerMapper.toOwnerDto(owner);
-        headers.setLocation(UriComponentsBuilder.newInstance()
-            .path("/api/owners/{id}").buildAndExpand(owner.getId()).toUri());
-        return new ResponseEntity<>(ownerDto, headers, HttpStatus.CREATED);
+
+        ProtoOwner pOwner = ProtoOwner.newBuilder().setId(owner.getId()).setFirstName(owner.getFirstName()).
+            setLastName(owner.getLastName()).setAddress(owner.getAddress()).setCity(owner.getCity()).setTelephone(owner.getTelephone()).build();
+
+        return new ResponseEntity<>(pOwner, HttpStatus.CREATED);
+
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<OwnerDto> updateOwner(Integer ownerId, OwnerFieldsDto ownerFieldsDto) {
+    @PutMapping("updateOwner/{ownerId}")
+    public ResponseEntity<ProtoOwner> updateOwner(@PathVariable("ownerId") Integer ownerId, @RequestBody ProtoOwnerAdd protoAddOwner) {
         Owner currentOwner = this.clinicService.findOwnerById(ownerId);
         if (currentOwner == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        currentOwner.setAddress(ownerFieldsDto.getAddress());
-        currentOwner.setCity(ownerFieldsDto.getCity());
-        currentOwner.setFirstName(ownerFieldsDto.getFirstName());
-        currentOwner.setLastName(ownerFieldsDto.getLastName());
-        currentOwner.setTelephone(ownerFieldsDto.getTelephone());
+        currentOwner.setAddress(protoAddOwner.getAddress());
+        currentOwner.setCity(protoAddOwner.getCity());
+        currentOwner.setFirstName(protoAddOwner.getFirstName());
+        currentOwner.setLastName(protoAddOwner.getLastName());
+        currentOwner.setTelephone(protoAddOwner.getTelephone());
         this.clinicService.saveOwner(currentOwner);
-        return new ResponseEntity<>(ownerMapper.toOwnerDto(currentOwner), HttpStatus.NO_CONTENT);
+
+        ProtoOwner pOwner = ProtoOwner.newBuilder().setId(currentOwner.getId()).setFirstName(currentOwner.getFirstName()).
+            setLastName(currentOwner.getLastName()).setAddress(currentOwner.getAddress()).setCity(currentOwner.getCity()).
+            setTelephone(currentOwner.getTelephone()).build();
+
+        return new ResponseEntity<>(pOwner, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Transactional
-    @Override
-    public ResponseEntity<OwnerDto> deleteOwner(Integer ownerId) {
+    @DeleteMapping("deleteOwner/{ownerId}")
+    public ResponseEntity<ProtoOwner> deleteOwner(@PathVariable("ownerId") Integer ownerId) {
         Owner owner = this.clinicService.findOwnerById(ownerId);
         if (owner == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -132,52 +164,65 @@ public class OwnerRestController implements OwnersApi {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<PetDto> addPetToOwner(Integer ownerId, PetFieldsDto petFieldsDto) {
-        HttpHeaders headers = new HttpHeaders();
-        Pet pet = petMapper.toPet(petFieldsDto);
-        Owner owner = new Owner();
-        owner.setId(ownerId);
-        pet.setOwner(owner);
-        PetType petType = this.clinicService.findPetTypeByName(pet.getType().getName());
-        pet.setType(petType);
-        this.clinicService.savePet(pet);
-        PetDto petDto = petMapper.toPetDto(pet);
-        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/pets/{id}")
-            .buildAndExpand(pet.getId()).toUri());
-        return new ResponseEntity<>(petDto, headers, HttpStatus.CREATED);
-    }
+    @PostMapping (value = "addPetToOwner/{ownerId}", consumes = "application/x-protobuf", produces = "application/x-protobuf")
+    public ResponseEntity<ProtoOwnerPet> addPetToOwner(@PathVariable("ownerId") Integer ownerId, @RequestBody ProtoOwnerAddPet petProto) {
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<VisitDto> addVisitToOwner(Integer ownerId, Integer petId, VisitFieldsDto visitFieldsDto) {
-        HttpHeaders headers = new HttpHeaders();
-        Visit visit = visitMapper.toVisit(visitFieldsDto);
         Pet pet = new Pet();
-        pet.setId(petId);
-        visit.setPet(pet);
+        pet.setName(petProto.getName());
+        pet.setBirthDate(LocalDate.parse(petProto.getBirthDate()));
+        pet.setType(this.clinicService.findPetTypeById(petProto.getPetTypeId()));
+        pet.setOwner(this.clinicService.findOwnerById(ownerId));
+        this.clinicService.savePet(pet);
+
+        ProtoOwnerPet petProtoResponse = ProtoOwnerPet.newBuilder().setId(pet.getId()).setName(pet.getName())
+            .setBirthDate(pet.getBirthDate().toString()).setPetType(pet.getType().getName()).build();
+
+        return new ResponseEntity<>(petProtoResponse, HttpStatus.CREATED);
+
+    }
+
+    @PostMapping (value = "addVisitToOwner/{petId}", consumes = "application/x-protobuf", produces = "application/x-protobuf")
+    public ResponseEntity<ProtoPetVisit> addVisitToOwner(@PathVariable("petId") Integer petId, @RequestBody ProtoOwnerAddVisit protoOwnerAddVisit) {
+
+        Visit visit = new Visit();
+        visit.setDescription(protoOwnerAddVisit.getVisitDescription());
+        visit.setDate(LocalDate.parse(protoOwnerAddVisit.getVisitDate()));
+        visit.setPet(this.clinicService.findPetById(petId));
+
         this.clinicService.saveVisit(visit);
-        VisitDto visitDto = visitMapper.toVisitDto(visit);
-        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/visits/{id}")
-            .buildAndExpand(visit.getId()).toUri());
-        return new ResponseEntity<>(visitDto, headers, HttpStatus.CREATED);
+        ProtoPetVisit vProto = ProtoPetVisit.newBuilder().setId(visit.getId()).setDate(visit.getDate().toString()).setDescription(visit.getDescription()).build();
+
+        return new ResponseEntity<>(vProto, HttpStatus.CREATED);
+
     }
 
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<PetDto> getOwnersPet(Integer ownerId, Integer petId) {
+    @RequestMapping("getOwnersPet/{ownerId}/{petId}")
+    public ResponseEntity<ProtoOwnerPet> getOwnersPet(@PathVariable("ownerId") Integer ownerId, @PathVariable("petId") Integer petId) {
+
         Owner owner = this.clinicService.findOwnerById(ownerId);
-        Pet pet = this.clinicService.findPetById(petId);
-        if (owner == null || pet == null) {
+        Pet p = this.clinicService.findPetById(petId);
+        if (owner == null || p == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            if (!pet.getOwner().equals(owner)) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            } else {
-                return new ResponseEntity<>(petMapper.toPetDto(pet), HttpStatus.OK);
-            }
+
+            ProtoOwnerPet protoOwnerPet = ProtoOwnerPet.newBuilder().setId(p.getId()).setName(p.getName()).setPetType(p.getType().getName()).
+                setBirthDate((p.getBirthDate().toString())).build();
+
+            return new ResponseEntity<>(protoOwnerPet, HttpStatus.OK);
+
+//            if (!p.getOwner().equals(owner)) {
+//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//            } else {
+//
+//                ProtoOwnerPet protoOwnerPet = ProtoOwnerPet.newBuilder().setId(p.getId()).setName(p.getName()).setPetType(p.getType().getName()).
+//                    setBirthDate((p.getBirthDate().toString())).build();
+//
+//                return new ResponseEntity<>(protoOwnerPet, HttpStatus.OK);
+//
+//            }
+
         }
     }
+
 }

@@ -1,0 +1,190 @@
+syntax = "proto3";
+package org.springframework.samples.petclinic.protobuf;
+option java_package = "org.springframework.samples.petclinic.protobuf";
+option java_multiple_files = true;
+
+message ProtoPetType {
+
+  int32 id = 1;
+  string name = 2;
+
+}
+
+message ProtoPetTypes {
+
+  repeated ProtoPetType petTypes = 1;
+
+}
+
+message ProtoPetTypeAdd {
+
+  string name = 1;
+
+}
+
+message ProtoPet {
+
+  int32 id = 1;
+  string name = 2;
+  string birth_date = 3;
+  string pet_type = 4;
+  ProtoPetOwner owner = 5;
+  repeated ProtoPetVisit visits = 6;
+
+}
+
+message ProtoPets {
+
+  repeated ProtoPet pets = 1;
+
+}
+
+message ProtoPetAdd {
+
+  string name = 1;
+  string birth_date = 2;
+  int32 pet_type_id = 3;
+  int32 owner_id = 4;
+
+}
+
+message ProtoPetOwner {
+
+  string first_name = 1;
+  string last_name = 2;
+  string address = 3;
+  string city = 4;
+  string telephone = 5;
+
+}
+
+message ProtoPetVisit {
+
+  int32 id = 1;
+  string date = 2;
+  string description = 3;
+
+}
+
+message ProtoOwner {
+
+  int32 id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string address = 4;
+  string city = 5;
+  string telephone = 6;
+  repeated ProtoOwnerPet pets = 7;
+
+}
+
+message ProtoOwners {
+
+  repeated ProtoOwner owners = 1;
+
+}
+
+message ProtoOwnerPet {
+
+  int32 id = 1;
+  string name = 2;
+  string birth_date = 3;
+  string pet_type = 4;
+
+}
+
+message ProtoOwnerFindByName {
+
+  string last_name = 1;
+
+}
+
+message ProtoOwnerAdd {
+
+  string first_name = 2;
+  string last_name = 3;
+  string address = 4;
+  string city = 5;
+  string telephone = 6;
+
+}
+
+message ProtoOwnerAddPet {
+
+  string name = 1;
+  string birth_date = 2;
+  int32 pet_type_id = 3;
+
+}
+
+message ProtoOwnerAddVisit {
+
+  string visit_date = 3;
+  string visit_description = 4;
+
+}
+
+message ProtoSpecialty {
+
+  int32 id = 1;
+  string name = 2;
+
+}
+
+message ProtoSpecialties {
+
+  repeated ProtoSpecialty specialties = 1;
+
+}
+
+message ProtoSpecialtyAdd {
+
+  string name = 1;
+
+}
+
+message ProtoVet {
+
+  int32 id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  repeated ProtoSpecialty specialties = 4;
+
+}
+
+message ProtoVets {
+
+  repeated ProtoVet vets = 1;
+
+}
+
+message ProtoVetAdd {
+
+  string first_name = 1;
+  string last_name = 2;
+  repeated ProtoSpecialty specialties = 3;
+
+}
+
+message ProtoVisit {
+
+  int32 id = 1;
+  string date = 2;
+  string description = 3;
+  string pet_name = 4;
+
+}
+
+message ProtoVisits {
+
+  repeated ProtoVisit visits = 1;
+
+}
+
+message ProtoVisitAdd {
+
+  string date = 1;
+  string description = 2;
+  int32 pet_id = 3;
+
+}

@@ -18,16 +18,13 @@ package org.springframework.samples.petclinic.rest.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.rest.api.PetsApi;
-import org.springframework.samples.petclinic.rest.dto.PetDto;
+import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.protobuf.*;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,56 +34,127 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("api")
-public class PetRestController implements PetsApi {
+public class PetRestController {
 
     private final ClinicService clinicService;
 
-    private final PetMapper petMapper;
-
-    public PetRestController(ClinicService clinicService, PetMapper petMapper) {
+    public PetRestController(ClinicService clinicService) {
         this.clinicService = clinicService;
-        this.petMapper = petMapper;
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<PetDto> getPet(Integer petId) {
-        PetDto pet = petMapper.toPetDto(this.clinicService.findPetById(petId));
-        if (pet == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(pet, HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<List<PetDto>> listPets() {
-        List<PetDto> pets = new ArrayList<>(petMapper.toPetsDto(this.clinicService.findAllPets()));
+    @RequestMapping("listPets")
+    public ResponseEntity<ProtoPets> listPets() {
+        List<Pet> pets = new ArrayList<>(this.clinicService.findAllPets());
         if (pets.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(pets, HttpStatus.OK);
+
+        List<ProtoPet> collection = new ArrayList<>();
+
+        for (Pet pet : pets) {
+
+            List<ProtoPetVisit> collection2 = new ArrayList<>();
+
+            for (Visit v : pet.getVisits()) {
+                ProtoPetVisit vProto = ProtoPetVisit.newBuilder().setId(v.getId()).setDate(v.getDate().toString()).setDescription(v.getDescription()).build();
+                collection2.add(vProto);
+            }
+
+            ProtoPetOwner protoPetOwner = ProtoPetOwner.newBuilder().setFirstName(pet.getOwner().getFirstName()).setLastName(pet.getOwner().getLastName())
+                .setAddress(pet.getOwner().getAddress()).setCity(pet.getOwner().getCity()).setTelephone(pet.getOwner().getTelephone()).build();
+
+            ProtoPet petProto = ProtoPet.newBuilder().setId(pet.getId()).setName(pet.getName()).setBirthDate(pet.getBirthDate().toString()).
+                setPetType(pet.getType().getName()).setOwner(protoPetOwner).addAllVisits(collection2).build();
+
+            collection.add(petProto);
+
+        }
+
+        ProtoPets protoPets = ProtoPets.newBuilder().addAllPets(collection).build();
+
+        return new ResponseEntity<>(protoPets, HttpStatus.OK);
+
     }
 
+    @RequestMapping("getPet/{petId}")
+    public ResponseEntity<ProtoPet> getPet(@PathVariable("petId")Integer petId) {
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<PetDto> updatePet(Integer petId, PetDto petDto) {
+        Pet pet = this.clinicService.findPetById(petId);
+        if (pet == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<ProtoPetVisit> collection = new ArrayList<>();
+
+        for (Visit v : pet.getVisits()) {
+            ProtoPetVisit vProto = ProtoPetVisit.newBuilder().setId(v.getId()).setDate(v.getDate().toString()).setDescription(v.getDescription()).build();
+            collection.add(vProto);
+        }
+
+        ProtoPetOwner protoPetOwner = ProtoPetOwner.newBuilder().setFirstName(pet.getOwner().getFirstName()).setLastName(pet.getOwner().getLastName())
+            .setAddress(pet.getOwner().getAddress()).setCity(pet.getOwner().getCity()).setTelephone(pet.getOwner().getTelephone()).build();
+
+        ProtoPet petProto = ProtoPet.newBuilder().setId(pet.getId()).setName(pet.getName()).setBirthDate(pet.getBirthDate().toString()).
+            setPetType(pet.getType().getName()).setOwner(protoPetOwner).addAllVisits(collection).build();
+
+        return new ResponseEntity<>(petProto, HttpStatus.OK);
+
+    }
+
+    @PostMapping (value = "addPet", consumes = "application/x-protobuf", produces = "application/x-protobuf")
+    public ResponseEntity<ProtoPet> addPet(@RequestBody ProtoPetAdd petProto) {
+
+        Pet pet = new Pet();
+        pet.setName(petProto.getName());
+        pet.setBirthDate(LocalDate.parse(petProto.getBirthDate()));
+        pet.setType(this.clinicService.findPetTypeById(petProto.getPetTypeId()));
+        pet.setOwner(this.clinicService.findOwnerById(petProto.getOwnerId()));
+        this.clinicService.savePet(pet);
+
+        ProtoPetOwner protoPetOwner = ProtoPetOwner.newBuilder().setFirstName(pet.getOwner().getFirstName()).setLastName(pet.getOwner().getLastName())
+            .setAddress(pet.getOwner().getAddress()).setCity(pet.getOwner().getCity()).setTelephone(pet.getOwner().getTelephone()).build();
+
+        ProtoPet petProtoResponse = ProtoPet.newBuilder().setId(pet.getId()).setName(pet.getName())
+            .setBirthDate(pet.getBirthDate().toString()).setPetType(pet.getType().getName())
+            .setOwner(protoPetOwner).build();
+
+        return new ResponseEntity<>(petProtoResponse, HttpStatus.OK);
+
+    }
+
+    @PutMapping("updatePet/{petId}")
+    public ResponseEntity<ProtoPet> updatePet(@PathVariable("petId") Integer petId, @RequestBody ProtoPetAdd petProto) {
         Pet currentPet = this.clinicService.findPetById(petId);
         if (currentPet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        currentPet.setBirthDate(petDto.getBirthDate());
-        currentPet.setName(petDto.getName());
-        currentPet.setType(petMapper.toPetType(petDto.getType()));
+
+        currentPet.setBirthDate(LocalDate.parse(petProto.getBirthDate()));
+        currentPet.setName(petProto.getName());
+        currentPet.setType(this.clinicService.findPetTypeById(petProto.getPetTypeId()));
+        currentPet.setOwner(this.clinicService.findOwnerById(petProto.getOwnerId()));
         this.clinicService.savePet(currentPet);
-        return new ResponseEntity<>(petMapper.toPetDto(currentPet), HttpStatus.NO_CONTENT);
+
+        List<ProtoPetVisit> collection = new ArrayList<>();
+
+        for (Visit v : currentPet.getVisits()) {
+            ProtoPetVisit vProto = ProtoPetVisit.newBuilder().setId(v.getId()).setDate(v.getDate().toString()).setDescription(v.getDescription()).build();
+            collection.add(vProto);
+        }
+
+        ProtoPetOwner protoPetOwner = ProtoPetOwner.newBuilder().setFirstName(currentPet.getOwner().getFirstName()).setLastName(currentPet.getOwner().getLastName())
+            .setAddress(currentPet.getOwner().getAddress()).setCity(currentPet.getOwner().getCity()).setTelephone(currentPet.getOwner().getTelephone()).build();
+
+        ProtoPet petProtoResponse = ProtoPet.newBuilder().setId(currentPet.getId()).setName(currentPet.getName())
+            .setBirthDate(currentPet.getBirthDate().toString()).setPetType(currentPet.getType().getName()).
+            setOwner(protoPetOwner).addAllVisits(collection).build();
+
+        return new ResponseEntity<>(petProtoResponse, HttpStatus.OK);
+
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<PetDto> deletePet(Integer petId) {
+    @DeleteMapping("deletePet/{petId}")
+    public ResponseEntity<ProtoPet> deletePet(@PathVariable("petId") Integer petId) {
         Pet pet = this.clinicService.findPetById(petId);
         if (pet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -95,10 +163,4 @@ public class PetRestController implements PetsApi {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<PetDto> addPet(PetDto petDto) {
-        this.clinicService.savePet(petMapper.toPet(petDto));
-        return new ResponseEntity<>(petDto, HttpStatus.OK);
-    }
 }
