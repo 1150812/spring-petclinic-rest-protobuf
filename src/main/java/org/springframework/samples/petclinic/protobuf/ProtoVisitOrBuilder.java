@@ -39,14 +39,8 @@ public interface ProtoVisitOrBuilder extends
       getDescriptionBytes();
 
   /**
-   * <code>string pet_name = 4;</code>
-   * @return The petName.
+   * <code>int32 pet_id = 4;</code>
+   * @return The petId.
    */
-  java.lang.String getPetName();
-  /**
-   * <code>string pet_name = 4;</code>
-   * @return The bytes for petName.
-   */
-  com.google.protobuf.ByteString
-      getPetNameBytes();
+  int getPetId();
 }

@@ -75,26 +75,26 @@ public interface ProtoOwnerOrBuilder extends
       getTelephoneBytes();
 
   /**
-   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
    */
-  java.util.List<org.springframework.samples.petclinic.protobuf.ProtoOwnerPet> 
+  java.util.List<org.springframework.samples.petclinic.protobuf.ProtoPet> 
       getPetsList();
   /**
-   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
    */
-  org.springframework.samples.petclinic.protobuf.ProtoOwnerPet getPets(int index);
+  org.springframework.samples.petclinic.protobuf.ProtoPet getPets(int index);
   /**
-   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
    */
   int getPetsCount();
   /**
-   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
    */
-  java.util.List<? extends org.springframework.samples.petclinic.protobuf.ProtoOwnerPetOrBuilder> 
+  java.util.List<? extends org.springframework.samples.petclinic.protobuf.ProtoPetOrBuilder> 
       getPetsOrBuilderList();
   /**
-   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
    */
-  org.springframework.samples.petclinic.protobuf.ProtoOwnerPetOrBuilder getPetsOrBuilder(
+  org.springframework.samples.petclinic.protobuf.ProtoPetOrBuilder getPetsOrBuilder(
       int index);
 }

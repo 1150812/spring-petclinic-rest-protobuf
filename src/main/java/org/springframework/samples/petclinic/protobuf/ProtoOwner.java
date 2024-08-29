@@ -253,41 +253,41 @@ private static final long serialVersionUID = 0L;
 
   public static final int PETS_FIELD_NUMBER = 7;
   @SuppressWarnings("serial")
-  private java.util.List<org.springframework.samples.petclinic.protobuf.ProtoOwnerPet> pets_;
+  private java.util.List<org.springframework.samples.petclinic.protobuf.ProtoPet> pets_;
   /**
-   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
    */
   @java.lang.Override
-  public java.util.List<org.springframework.samples.petclinic.protobuf.ProtoOwnerPet> getPetsList() {
+  public java.util.List<org.springframework.samples.petclinic.protobuf.ProtoPet> getPetsList() {
     return pets_;
   }
   /**
-   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends org.springframework.samples.petclinic.protobuf.ProtoOwnerPetOrBuilder> 
+  public java.util.List<? extends org.springframework.samples.petclinic.protobuf.ProtoPetOrBuilder> 
       getPetsOrBuilderList() {
     return pets_;
   }
   /**
-   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
    */
   @java.lang.Override
   public int getPetsCount() {
     return pets_.size();
   }
   /**
-   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
    */
   @java.lang.Override
-  public org.springframework.samples.petclinic.protobuf.ProtoOwnerPet getPets(int index) {
+  public org.springframework.samples.petclinic.protobuf.ProtoPet getPets(int index) {
     return pets_.get(index);
   }
   /**
-   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+   * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
    */
   @java.lang.Override
-  public org.springframework.samples.petclinic.protobuf.ProtoOwnerPetOrBuilder getPetsOrBuilder(
+  public org.springframework.samples.petclinic.protobuf.ProtoPetOrBuilder getPetsOrBuilder(
       int index) {
     return pets_.get(index);
   }
@@ -780,9 +780,9 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 50
             case 58: {
-              org.springframework.samples.petclinic.protobuf.ProtoOwnerPet m =
+              org.springframework.samples.petclinic.protobuf.ProtoPet m =
                   input.readMessage(
-                      org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.parser(),
+                      org.springframework.samples.petclinic.protobuf.ProtoPet.parser(),
                       extensionRegistry);
               if (petsBuilder_ == null) {
                 ensurePetsIsMutable();
@@ -1201,22 +1201,22 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.util.List<org.springframework.samples.petclinic.protobuf.ProtoOwnerPet> pets_ =
+    private java.util.List<org.springframework.samples.petclinic.protobuf.ProtoPet> pets_ =
       java.util.Collections.emptyList();
     private void ensurePetsIsMutable() {
       if (!((bitField0_ & 0x00000040) != 0)) {
-        pets_ = new java.util.ArrayList<org.springframework.samples.petclinic.protobuf.ProtoOwnerPet>(pets_);
+        pets_ = new java.util.ArrayList<org.springframework.samples.petclinic.protobuf.ProtoPet>(pets_);
         bitField0_ |= 0x00000040;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        org.springframework.samples.petclinic.protobuf.ProtoOwnerPet, org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.Builder, org.springframework.samples.petclinic.protobuf.ProtoOwnerPetOrBuilder> petsBuilder_;
+        org.springframework.samples.petclinic.protobuf.ProtoPet, org.springframework.samples.petclinic.protobuf.ProtoPet.Builder, org.springframework.samples.petclinic.protobuf.ProtoPetOrBuilder> petsBuilder_;
 
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
-    public java.util.List<org.springframework.samples.petclinic.protobuf.ProtoOwnerPet> getPetsList() {
+    public java.util.List<org.springframework.samples.petclinic.protobuf.ProtoPet> getPetsList() {
       if (petsBuilder_ == null) {
         return java.util.Collections.unmodifiableList(pets_);
       } else {
@@ -1224,7 +1224,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
     public int getPetsCount() {
       if (petsBuilder_ == null) {
@@ -1234,9 +1234,9 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
-    public org.springframework.samples.petclinic.protobuf.ProtoOwnerPet getPets(int index) {
+    public org.springframework.samples.petclinic.protobuf.ProtoPet getPets(int index) {
       if (petsBuilder_ == null) {
         return pets_.get(index);
       } else {
@@ -1244,10 +1244,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
     public Builder setPets(
-        int index, org.springframework.samples.petclinic.protobuf.ProtoOwnerPet value) {
+        int index, org.springframework.samples.petclinic.protobuf.ProtoPet value) {
       if (petsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -1261,10 +1261,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
     public Builder setPets(
-        int index, org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.Builder builderForValue) {
+        int index, org.springframework.samples.petclinic.protobuf.ProtoPet.Builder builderForValue) {
       if (petsBuilder_ == null) {
         ensurePetsIsMutable();
         pets_.set(index, builderForValue.build());
@@ -1275,9 +1275,9 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
-    public Builder addPets(org.springframework.samples.petclinic.protobuf.ProtoOwnerPet value) {
+    public Builder addPets(org.springframework.samples.petclinic.protobuf.ProtoPet value) {
       if (petsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -1291,10 +1291,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
     public Builder addPets(
-        int index, org.springframework.samples.petclinic.protobuf.ProtoOwnerPet value) {
+        int index, org.springframework.samples.petclinic.protobuf.ProtoPet value) {
       if (petsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -1308,10 +1308,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
     public Builder addPets(
-        org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.Builder builderForValue) {
+        org.springframework.samples.petclinic.protobuf.ProtoPet.Builder builderForValue) {
       if (petsBuilder_ == null) {
         ensurePetsIsMutable();
         pets_.add(builderForValue.build());
@@ -1322,10 +1322,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
     public Builder addPets(
-        int index, org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.Builder builderForValue) {
+        int index, org.springframework.samples.petclinic.protobuf.ProtoPet.Builder builderForValue) {
       if (petsBuilder_ == null) {
         ensurePetsIsMutable();
         pets_.add(index, builderForValue.build());
@@ -1336,10 +1336,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
     public Builder addAllPets(
-        java.lang.Iterable<? extends org.springframework.samples.petclinic.protobuf.ProtoOwnerPet> values) {
+        java.lang.Iterable<? extends org.springframework.samples.petclinic.protobuf.ProtoPet> values) {
       if (petsBuilder_ == null) {
         ensurePetsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -1351,7 +1351,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
     public Builder clearPets() {
       if (petsBuilder_ == null) {
@@ -1364,7 +1364,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
     public Builder removePets(int index) {
       if (petsBuilder_ == null) {
@@ -1377,16 +1377,16 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
-    public org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.Builder getPetsBuilder(
+    public org.springframework.samples.petclinic.protobuf.ProtoPet.Builder getPetsBuilder(
         int index) {
       return getPetsFieldBuilder().getBuilder(index);
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
-    public org.springframework.samples.petclinic.protobuf.ProtoOwnerPetOrBuilder getPetsOrBuilder(
+    public org.springframework.samples.petclinic.protobuf.ProtoPetOrBuilder getPetsOrBuilder(
         int index) {
       if (petsBuilder_ == null) {
         return pets_.get(index);  } else {
@@ -1394,9 +1394,9 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
-    public java.util.List<? extends org.springframework.samples.petclinic.protobuf.ProtoOwnerPetOrBuilder> 
+    public java.util.List<? extends org.springframework.samples.petclinic.protobuf.ProtoPetOrBuilder> 
          getPetsOrBuilderList() {
       if (petsBuilder_ != null) {
         return petsBuilder_.getMessageOrBuilderList();
@@ -1405,33 +1405,33 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
-    public org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.Builder addPetsBuilder() {
+    public org.springframework.samples.petclinic.protobuf.ProtoPet.Builder addPetsBuilder() {
       return getPetsFieldBuilder().addBuilder(
-          org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.getDefaultInstance());
+          org.springframework.samples.petclinic.protobuf.ProtoPet.getDefaultInstance());
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
-    public org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.Builder addPetsBuilder(
+    public org.springframework.samples.petclinic.protobuf.ProtoPet.Builder addPetsBuilder(
         int index) {
       return getPetsFieldBuilder().addBuilder(
-          index, org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.getDefaultInstance());
+          index, org.springframework.samples.petclinic.protobuf.ProtoPet.getDefaultInstance());
     }
     /**
-     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoOwnerPet pets = 7;</code>
+     * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPet pets = 7;</code>
      */
-    public java.util.List<org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.Builder> 
+    public java.util.List<org.springframework.samples.petclinic.protobuf.ProtoPet.Builder> 
          getPetsBuilderList() {
       return getPetsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        org.springframework.samples.petclinic.protobuf.ProtoOwnerPet, org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.Builder, org.springframework.samples.petclinic.protobuf.ProtoOwnerPetOrBuilder> 
+        org.springframework.samples.petclinic.protobuf.ProtoPet, org.springframework.samples.petclinic.protobuf.ProtoPet.Builder, org.springframework.samples.petclinic.protobuf.ProtoPetOrBuilder> 
         getPetsFieldBuilder() {
       if (petsBuilder_ == null) {
         petsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-            org.springframework.samples.petclinic.protobuf.ProtoOwnerPet, org.springframework.samples.petclinic.protobuf.ProtoOwnerPet.Builder, org.springframework.samples.petclinic.protobuf.ProtoOwnerPetOrBuilder>(
+            org.springframework.samples.petclinic.protobuf.ProtoPet, org.springframework.samples.petclinic.protobuf.ProtoPet.Builder, org.springframework.samples.petclinic.protobuf.ProtoPetOrBuilder>(
                 pets_,
                 ((bitField0_ & 0x00000040) != 0),
                 getParentForChildren(),

@@ -19,7 +19,6 @@ private static final long serialVersionUID = 0L;
   private ProtoPet() {
     name_ = "";
     birthDate_ = "";
-    petType_ = "";
     visits_ = java.util.Collections.emptyList();
   }
 
@@ -133,69 +132,41 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int PET_TYPE_FIELD_NUMBER = 4;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object petType_ = "";
+  public static final int TYPE_FIELD_NUMBER = 4;
+  private org.springframework.samples.petclinic.protobuf.ProtoPetType type_;
   /**
-   * <code>string pet_type = 4;</code>
-   * @return The petType.
+   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
+   * @return Whether the type field is set.
    */
   @java.lang.Override
-  public java.lang.String getPetType() {
-    java.lang.Object ref = petType_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      petType_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string pet_type = 4;</code>
-   * @return The bytes for petType.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getPetTypeBytes() {
-    java.lang.Object ref = petType_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      petType_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int OWNER_FIELD_NUMBER = 5;
-  private org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner_;
-  /**
-   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
-   * @return Whether the owner field is set.
-   */
-  @java.lang.Override
-  public boolean hasOwner() {
+  public boolean hasType() {
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
-   * @return The owner.
+   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
+   * @return The type.
    */
   @java.lang.Override
-  public org.springframework.samples.petclinic.protobuf.ProtoPetOwner getOwner() {
-    return owner_ == null ? org.springframework.samples.petclinic.protobuf.ProtoPetOwner.getDefaultInstance() : owner_;
+  public org.springframework.samples.petclinic.protobuf.ProtoPetType getType() {
+    return type_ == null ? org.springframework.samples.petclinic.protobuf.ProtoPetType.getDefaultInstance() : type_;
   }
   /**
-   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
+   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
    */
   @java.lang.Override
-  public org.springframework.samples.petclinic.protobuf.ProtoPetOwnerOrBuilder getOwnerOrBuilder() {
-    return owner_ == null ? org.springframework.samples.petclinic.protobuf.ProtoPetOwner.getDefaultInstance() : owner_;
+  public org.springframework.samples.petclinic.protobuf.ProtoPetTypeOrBuilder getTypeOrBuilder() {
+    return type_ == null ? org.springframework.samples.petclinic.protobuf.ProtoPetType.getDefaultInstance() : type_;
+  }
+
+  public static final int OWNER_ID_FIELD_NUMBER = 5;
+  private int ownerId_ = 0;
+  /**
+   * <code>int32 owner_id = 5;</code>
+   * @return The ownerId.
+   */
+  @java.lang.Override
+  public int getOwnerId() {
+    return ownerId_;
   }
 
   public static final int VISITS_FIELD_NUMBER = 6;
@@ -262,11 +233,11 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(birthDate_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, birthDate_);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(petType_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, petType_);
-    }
     if (((bitField0_ & 0x00000001) != 0)) {
-      output.writeMessage(5, getOwner());
+      output.writeMessage(4, getType());
+    }
+    if (ownerId_ != 0) {
+      output.writeInt32(5, ownerId_);
     }
     for (int i = 0; i < visits_.size(); i++) {
       output.writeMessage(6, visits_.get(i));
@@ -290,12 +261,13 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(birthDate_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, birthDate_);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(petType_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, petType_);
-    }
     if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(5, getOwner());
+        .computeMessageSize(4, getType());
+    }
+    if (ownerId_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(5, ownerId_);
     }
     for (int i = 0; i < visits_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
@@ -322,13 +294,13 @@ private static final long serialVersionUID = 0L;
         .equals(other.getName())) return false;
     if (!getBirthDate()
         .equals(other.getBirthDate())) return false;
-    if (!getPetType()
-        .equals(other.getPetType())) return false;
-    if (hasOwner() != other.hasOwner()) return false;
-    if (hasOwner()) {
-      if (!getOwner()
-          .equals(other.getOwner())) return false;
+    if (hasType() != other.hasType()) return false;
+    if (hasType()) {
+      if (!getType()
+          .equals(other.getType())) return false;
     }
+    if (getOwnerId()
+        != other.getOwnerId()) return false;
     if (!getVisitsList()
         .equals(other.getVisitsList())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -348,12 +320,12 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getName().hashCode();
     hash = (37 * hash) + BIRTH_DATE_FIELD_NUMBER;
     hash = (53 * hash) + getBirthDate().hashCode();
-    hash = (37 * hash) + PET_TYPE_FIELD_NUMBER;
-    hash = (53 * hash) + getPetType().hashCode();
-    if (hasOwner()) {
-      hash = (37 * hash) + OWNER_FIELD_NUMBER;
-      hash = (53 * hash) + getOwner().hashCode();
+    if (hasType()) {
+      hash = (37 * hash) + TYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getType().hashCode();
     }
+    hash = (37 * hash) + OWNER_ID_FIELD_NUMBER;
+    hash = (53 * hash) + getOwnerId();
     if (getVisitsCount() > 0) {
       hash = (37 * hash) + VISITS_FIELD_NUMBER;
       hash = (53 * hash) + getVisitsList().hashCode();
@@ -488,7 +460,7 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
-        getOwnerFieldBuilder();
+        getTypeFieldBuilder();
         getVisitsFieldBuilder();
       }
     }
@@ -499,12 +471,12 @@ private static final long serialVersionUID = 0L;
       id_ = 0;
       name_ = "";
       birthDate_ = "";
-      petType_ = "";
-      owner_ = null;
-      if (ownerBuilder_ != null) {
-        ownerBuilder_.dispose();
-        ownerBuilder_ = null;
+      type_ = null;
+      if (typeBuilder_ != null) {
+        typeBuilder_.dispose();
+        typeBuilder_ = null;
       }
+      ownerId_ = 0;
       if (visitsBuilder_ == null) {
         visits_ = java.util.Collections.emptyList();
       } else {
@@ -567,15 +539,15 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000004) != 0)) {
         result.birthDate_ = birthDate_;
       }
-      if (((from_bitField0_ & 0x00000008) != 0)) {
-        result.petType_ = petType_;
-      }
       int to_bitField0_ = 0;
-      if (((from_bitField0_ & 0x00000010) != 0)) {
-        result.owner_ = ownerBuilder_ == null
-            ? owner_
-            : ownerBuilder_.build();
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.type_ = typeBuilder_ == null
+            ? type_
+            : typeBuilder_.build();
         to_bitField0_ |= 0x00000001;
+      }
+      if (((from_bitField0_ & 0x00000010) != 0)) {
+        result.ownerId_ = ownerId_;
       }
       result.bitField0_ |= to_bitField0_;
     }
@@ -637,13 +609,11 @@ private static final long serialVersionUID = 0L;
         bitField0_ |= 0x00000004;
         onChanged();
       }
-      if (!other.getPetType().isEmpty()) {
-        petType_ = other.petType_;
-        bitField0_ |= 0x00000008;
-        onChanged();
+      if (other.hasType()) {
+        mergeType(other.getType());
       }
-      if (other.hasOwner()) {
-        mergeOwner(other.getOwner());
+      if (other.getOwnerId() != 0) {
+        setOwnerId(other.getOwnerId());
       }
       if (visitsBuilder_ == null) {
         if (!other.visits_.isEmpty()) {
@@ -713,17 +683,17 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 26
             case 34: {
-              petType_ = input.readStringRequireUtf8();
+              input.readMessage(
+                  getTypeFieldBuilder().getBuilder(),
+                  extensionRegistry);
               bitField0_ |= 0x00000008;
               break;
             } // case 34
-            case 42: {
-              input.readMessage(
-                  getOwnerFieldBuilder().getBuilder(),
-                  extensionRegistry);
+            case 40: {
+              ownerId_ = input.readInt32();
               bitField0_ |= 0x00000010;
               break;
-            } // case 42
+            } // case 40
             case 50: {
               org.springframework.samples.petclinic.protobuf.ProtoPetVisit m =
                   input.readMessage(
@@ -930,197 +900,157 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object petType_ = "";
-    /**
-     * <code>string pet_type = 4;</code>
-     * @return The petType.
-     */
-    public java.lang.String getPetType() {
-      java.lang.Object ref = petType_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        petType_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string pet_type = 4;</code>
-     * @return The bytes for petType.
-     */
-    public com.google.protobuf.ByteString
-        getPetTypeBytes() {
-      java.lang.Object ref = petType_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        petType_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string pet_type = 4;</code>
-     * @param value The petType to set.
-     * @return This builder for chaining.
-     */
-    public Builder setPetType(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      petType_ = value;
-      bitField0_ |= 0x00000008;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string pet_type = 4;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearPetType() {
-      petType_ = getDefaultInstance().getPetType();
-      bitField0_ = (bitField0_ & ~0x00000008);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string pet_type = 4;</code>
-     * @param value The bytes for petType to set.
-     * @return This builder for chaining.
-     */
-    public Builder setPetTypeBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      petType_ = value;
-      bitField0_ |= 0x00000008;
-      onChanged();
-      return this;
-    }
-
-    private org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner_;
+    private org.springframework.samples.petclinic.protobuf.ProtoPetType type_;
     private com.google.protobuf.SingleFieldBuilderV3<
-        org.springframework.samples.petclinic.protobuf.ProtoPetOwner, org.springframework.samples.petclinic.protobuf.ProtoPetOwner.Builder, org.springframework.samples.petclinic.protobuf.ProtoPetOwnerOrBuilder> ownerBuilder_;
+        org.springframework.samples.petclinic.protobuf.ProtoPetType, org.springframework.samples.petclinic.protobuf.ProtoPetType.Builder, org.springframework.samples.petclinic.protobuf.ProtoPetTypeOrBuilder> typeBuilder_;
     /**
-     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
-     * @return Whether the owner field is set.
+     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
+     * @return Whether the type field is set.
      */
-    public boolean hasOwner() {
-      return ((bitField0_ & 0x00000010) != 0);
+    public boolean hasType() {
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
-     * @return The owner.
+     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
+     * @return The type.
      */
-    public org.springframework.samples.petclinic.protobuf.ProtoPetOwner getOwner() {
-      if (ownerBuilder_ == null) {
-        return owner_ == null ? org.springframework.samples.petclinic.protobuf.ProtoPetOwner.getDefaultInstance() : owner_;
+    public org.springframework.samples.petclinic.protobuf.ProtoPetType getType() {
+      if (typeBuilder_ == null) {
+        return type_ == null ? org.springframework.samples.petclinic.protobuf.ProtoPetType.getDefaultInstance() : type_;
       } else {
-        return ownerBuilder_.getMessage();
+        return typeBuilder_.getMessage();
       }
     }
     /**
-     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
+     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
      */
-    public Builder setOwner(org.springframework.samples.petclinic.protobuf.ProtoPetOwner value) {
-      if (ownerBuilder_ == null) {
+    public Builder setType(org.springframework.samples.petclinic.protobuf.ProtoPetType value) {
+      if (typeBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        owner_ = value;
+        type_ = value;
       } else {
-        ownerBuilder_.setMessage(value);
+        typeBuilder_.setMessage(value);
       }
-      bitField0_ |= 0x00000010;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
     /**
-     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
+     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
      */
-    public Builder setOwner(
-        org.springframework.samples.petclinic.protobuf.ProtoPetOwner.Builder builderForValue) {
-      if (ownerBuilder_ == null) {
-        owner_ = builderForValue.build();
+    public Builder setType(
+        org.springframework.samples.petclinic.protobuf.ProtoPetType.Builder builderForValue) {
+      if (typeBuilder_ == null) {
+        type_ = builderForValue.build();
       } else {
-        ownerBuilder_.setMessage(builderForValue.build());
+        typeBuilder_.setMessage(builderForValue.build());
       }
-      bitField0_ |= 0x00000010;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
     /**
-     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
+     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
      */
-    public Builder mergeOwner(org.springframework.samples.petclinic.protobuf.ProtoPetOwner value) {
-      if (ownerBuilder_ == null) {
-        if (((bitField0_ & 0x00000010) != 0) &&
-          owner_ != null &&
-          owner_ != org.springframework.samples.petclinic.protobuf.ProtoPetOwner.getDefaultInstance()) {
-          getOwnerBuilder().mergeFrom(value);
+    public Builder mergeType(org.springframework.samples.petclinic.protobuf.ProtoPetType value) {
+      if (typeBuilder_ == null) {
+        if (((bitField0_ & 0x00000008) != 0) &&
+          type_ != null &&
+          type_ != org.springframework.samples.petclinic.protobuf.ProtoPetType.getDefaultInstance()) {
+          getTypeBuilder().mergeFrom(value);
         } else {
-          owner_ = value;
+          type_ = value;
         }
       } else {
-        ownerBuilder_.mergeFrom(value);
+        typeBuilder_.mergeFrom(value);
       }
-      if (owner_ != null) {
-        bitField0_ |= 0x00000010;
+      if (type_ != null) {
+        bitField0_ |= 0x00000008;
         onChanged();
       }
       return this;
     }
     /**
-     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
+     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
      */
-    public Builder clearOwner() {
-      bitField0_ = (bitField0_ & ~0x00000010);
-      owner_ = null;
-      if (ownerBuilder_ != null) {
-        ownerBuilder_.dispose();
-        ownerBuilder_ = null;
+    public Builder clearType() {
+      bitField0_ = (bitField0_ & ~0x00000008);
+      type_ = null;
+      if (typeBuilder_ != null) {
+        typeBuilder_.dispose();
+        typeBuilder_ = null;
       }
       onChanged();
       return this;
     }
     /**
-     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
+     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
      */
-    public org.springframework.samples.petclinic.protobuf.ProtoPetOwner.Builder getOwnerBuilder() {
-      bitField0_ |= 0x00000010;
+    public org.springframework.samples.petclinic.protobuf.ProtoPetType.Builder getTypeBuilder() {
+      bitField0_ |= 0x00000008;
       onChanged();
-      return getOwnerFieldBuilder().getBuilder();
+      return getTypeFieldBuilder().getBuilder();
     }
     /**
-     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
+     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
      */
-    public org.springframework.samples.petclinic.protobuf.ProtoPetOwnerOrBuilder getOwnerOrBuilder() {
-      if (ownerBuilder_ != null) {
-        return ownerBuilder_.getMessageOrBuilder();
+    public org.springframework.samples.petclinic.protobuf.ProtoPetTypeOrBuilder getTypeOrBuilder() {
+      if (typeBuilder_ != null) {
+        return typeBuilder_.getMessageOrBuilder();
       } else {
-        return owner_ == null ?
-            org.springframework.samples.petclinic.protobuf.ProtoPetOwner.getDefaultInstance() : owner_;
+        return type_ == null ?
+            org.springframework.samples.petclinic.protobuf.ProtoPetType.getDefaultInstance() : type_;
       }
     }
     /**
-     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
+     * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        org.springframework.samples.petclinic.protobuf.ProtoPetOwner, org.springframework.samples.petclinic.protobuf.ProtoPetOwner.Builder, org.springframework.samples.petclinic.protobuf.ProtoPetOwnerOrBuilder> 
-        getOwnerFieldBuilder() {
-      if (ownerBuilder_ == null) {
-        ownerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            org.springframework.samples.petclinic.protobuf.ProtoPetOwner, org.springframework.samples.petclinic.protobuf.ProtoPetOwner.Builder, org.springframework.samples.petclinic.protobuf.ProtoPetOwnerOrBuilder>(
-                getOwner(),
+        org.springframework.samples.petclinic.protobuf.ProtoPetType, org.springframework.samples.petclinic.protobuf.ProtoPetType.Builder, org.springframework.samples.petclinic.protobuf.ProtoPetTypeOrBuilder> 
+        getTypeFieldBuilder() {
+      if (typeBuilder_ == null) {
+        typeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.springframework.samples.petclinic.protobuf.ProtoPetType, org.springframework.samples.petclinic.protobuf.ProtoPetType.Builder, org.springframework.samples.petclinic.protobuf.ProtoPetTypeOrBuilder>(
+                getType(),
                 getParentForChildren(),
                 isClean());
-        owner_ = null;
+        type_ = null;
       }
-      return ownerBuilder_;
+      return typeBuilder_;
+    }
+
+    private int ownerId_ ;
+    /**
+     * <code>int32 owner_id = 5;</code>
+     * @return The ownerId.
+     */
+    @java.lang.Override
+    public int getOwnerId() {
+      return ownerId_;
+    }
+    /**
+     * <code>int32 owner_id = 5;</code>
+     * @param value The ownerId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setOwnerId(int value) {
+
+      ownerId_ = value;
+      bitField0_ |= 0x00000010;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 owner_id = 5;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearOwnerId() {
+      bitField0_ = (bitField0_ & ~0x00000010);
+      ownerId_ = 0;
+      onChanged();
+      return this;
     }
 
     private java.util.List<org.springframework.samples.petclinic.protobuf.ProtoPetVisit> visits_ =

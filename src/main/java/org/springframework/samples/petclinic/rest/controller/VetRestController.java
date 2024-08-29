@@ -41,8 +41,9 @@ public class VetRestController {
         this.clinicService = clinicService;
     }
 
-    @RequestMapping("listVets")
+    @GetMapping("vets")
     public ResponseEntity<ProtoVets> listVets() {
+
         List<Vet> vets = new ArrayList<>(this.clinicService.findAllVets());
 
         if (vets.isEmpty()) {
@@ -73,8 +74,9 @@ public class VetRestController {
 
     }
 
-    @RequestMapping("getVet/{vetId}")
+    @GetMapping("vets/{vetId}")
     public ResponseEntity<ProtoVet> getVet(@PathVariable ("vetId") Integer vetId)  {
+
         Vet vet = this.clinicService.findVetById(vetId);
         if (vet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -128,28 +130,38 @@ public class VetRestController {
 //        return new ResponseEntity<>(vetProto, HttpStatus.CREATED);
 //    }
 
-//    @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-//    @Override
-//    public ResponseEntity<VetDto> updateVet(Integer vetId,VetDto vetDto)  {
-//        Vet currentVet = this.clinicService.findVetById(vetId);
-//        if (currentVet == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        currentVet.setFirstName(vetDto.getFirstName());
-//        currentVet.setLastName(vetDto.getLastName());
-//        currentVet.clearSpecialties();
-//        for (Specialty spec : specialtyMapper.toSpecialtys(vetDto.getSpecialties())) {
-//            currentVet.addSpecialty(spec);
-//        }
-//        if(currentVet.getNrOfSpecialties() > 0){
-//            List<Specialty> vetSpecialities = this.clinicService.findSpecialtiesByNameIn(currentVet.getSpecialties().stream().map(Specialty::getName).collect(Collectors.toSet()));
-//            currentVet.setSpecialties(vetSpecialities);
-//        }
-//        this.clinicService.saveVet(currentVet);
-//        return new ResponseEntity<>(vetMapper.toVetDto(currentVet), HttpStatus.NO_CONTENT);
-//    }
+    @PutMapping("vets/{vetId}")
+    public ResponseEntity<ProtoVet> updateVet(@PathVariable ("vetId") Integer vetId, @RequestBody ProtoVetAdd protoAdd)  {
 
-    @DeleteMapping("deleteVet/{vetId}")
+        Vet currentVet = this.clinicService.findVetById(vetId);
+        if (currentVet == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        currentVet.setFirstName(protoAdd.getFirstName());
+        currentVet.setLastName(protoAdd.getLastName());
+        currentVet.clearSpecialties();
+
+        for (ProtoSpecialty ps : protoAdd.getSpecialtiesList()) {
+
+            for(Specialty s: this.clinicService.findAllSpecialties()) {
+
+                if(s.getName().equals(ps.getName())){
+
+                    currentVet.addSpecialty(s);
+
+                }
+
+            }
+
+        }
+
+        this.clinicService.saveVet(currentVet);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
+    @DeleteMapping("vets/{vetId}")
     public ResponseEntity<VetDto> deleteVet(@PathVariable ("vetId") Integer vetId) {
         Vet vet = this.clinicService.findVetById(vetId);
         if (vet == null) {
@@ -158,4 +170,5 @@ public class VetRestController {
         this.clinicService.deleteVet(vet);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }

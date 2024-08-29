@@ -39,31 +39,25 @@ public interface ProtoPetOrBuilder extends
       getBirthDateBytes();
 
   /**
-   * <code>string pet_type = 4;</code>
-   * @return The petType.
+   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
+   * @return Whether the type field is set.
    */
-  java.lang.String getPetType();
+  boolean hasType();
   /**
-   * <code>string pet_type = 4;</code>
-   * @return The bytes for petType.
+   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
+   * @return The type.
    */
-  com.google.protobuf.ByteString
-      getPetTypeBytes();
+  org.springframework.samples.petclinic.protobuf.ProtoPetType getType();
+  /**
+   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 4;</code>
+   */
+  org.springframework.samples.petclinic.protobuf.ProtoPetTypeOrBuilder getTypeOrBuilder();
 
   /**
-   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
-   * @return Whether the owner field is set.
+   * <code>int32 owner_id = 5;</code>
+   * @return The ownerId.
    */
-  boolean hasOwner();
-  /**
-   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
-   * @return The owner.
-   */
-  org.springframework.samples.petclinic.protobuf.ProtoPetOwner getOwner();
-  /**
-   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetOwner owner = 5;</code>
-   */
-  org.springframework.samples.petclinic.protobuf.ProtoPetOwnerOrBuilder getOwnerOrBuilder();
+  int getOwnerId();
 
   /**
    * <code>repeated .org.springframework.samples.petclinic.protobuf.ProtoPetVisit visits = 6;</code>

@@ -36,12 +36,11 @@ public class SpecialtyRestController {
 
     private final ClinicService clinicService;
 
-
     public SpecialtyRestController(ClinicService clinicService) {
         this.clinicService = clinicService;
     }
 
-    @RequestMapping("listSpecialties")
+    @GetMapping("specialties")
     public ResponseEntity<ProtoSpecialties> listSpecialties() {
 
         List<Specialty> specialties = new ArrayList<>(this.clinicService.findAllSpecialties());
@@ -63,8 +62,9 @@ public class SpecialtyRestController {
 
     }
 
-    @RequestMapping("getSpecialty/{specialtyId}")
+    @GetMapping("specialties/{specialtyId}")
     public ResponseEntity<ProtoSpecialty> getSpecialty(@PathVariable("specialtyId") Integer specialtyId) {
+
         Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
 
         if (specialty == null) {
@@ -77,7 +77,7 @@ public class SpecialtyRestController {
 
     }
 
-    @PostMapping (value = "addSpecialty")
+    @PostMapping (value = "specialties")
     public ResponseEntity<ProtoSpecialty> addSpecialty(@RequestBody ProtoSpecialtyAdd specialtyProtoAdd) {
 
         Specialty specialty = new Specialty();
@@ -87,9 +87,10 @@ public class SpecialtyRestController {
         ProtoSpecialty specialtyProto = ProtoSpecialty.newBuilder().setId(specialty.getId()).setName(specialty.getName()).build();
 
         return new ResponseEntity<>(specialtyProto, HttpStatus.CREATED);
+
     }
 
-    @PutMapping("updateSpecialty/{specialtyId}")
+    @PutMapping("specialties/{specialtyId}")
     public ResponseEntity<ProtoSpecialty> updateSpecialty(@PathVariable ("specialtyId") Integer specialtyId, @RequestBody ProtoSpecialtyAdd protoAdd) {
 
         Specialty currentSpecialty = this.clinicService.findSpecialtyById(specialtyId);
@@ -100,20 +101,20 @@ public class SpecialtyRestController {
         currentSpecialty.setName(protoAdd.getName());
         this.clinicService.saveSpecialty(currentSpecialty);
 
-        ProtoSpecialty specialtyProto = ProtoSpecialty.newBuilder().setId(currentSpecialty.getId()).setName(currentSpecialty.getName()).build();
-
-        return new ResponseEntity<>(specialtyProto, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 
-    @DeleteMapping("deleteSpecialty/{specialtyId}")
+    @DeleteMapping("specialties/{specialtyId}")
     public ResponseEntity<ProtoSpecialty> deleteSpecialty(@PathVariable("specialtyId") Integer specialtyId) {
+
         Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
         if (specialty == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         this.clinicService.deleteSpecialty(specialty);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 
 }

@@ -150,59 +150,60 @@ public final class Petclinic {
       "\rProtoPetTypes\022N\n\010petTypes\030\001 \003(\0132<.org.s" +
       "pringframework.samples.petclinic.protobu" +
       "f.ProtoPetType\"\037\n\017ProtoPetTypeAdd\022\014\n\004nam" +
-      "e\030\001 \001(\t\"\347\001\n\010ProtoPet\022\n\n\002id\030\001 \001(\005\022\014\n\004name" +
-      "\030\002 \001(\t\022\022\n\nbirth_date\030\003 \001(\t\022\020\n\010pet_type\030\004" +
-      " \001(\t\022L\n\005owner\030\005 \001(\0132=.org.springframewor" +
-      "k.samples.petclinic.protobuf.ProtoPetOwn" +
-      "er\022M\n\006visits\030\006 \003(\0132=.org.springframework" +
-      ".samples.petclinic.protobuf.ProtoPetVisi" +
-      "t\"S\n\tProtoPets\022F\n\004pets\030\001 \003(\01328.org.sprin" +
-      "gframework.samples.petclinic.protobuf.Pr" +
-      "otoPet\"V\n\013ProtoPetAdd\022\014\n\004name\030\001 \001(\t\022\022\n\nb" +
-      "irth_date\030\002 \001(\t\022\023\n\013pet_type_id\030\003 \001(\005\022\020\n\010" +
-      "owner_id\030\004 \001(\005\"h\n\rProtoPetOwner\022\022\n\nfirst" +
-      "_name\030\001 \001(\t\022\021\n\tlast_name\030\002 \001(\t\022\017\n\007addres" +
-      "s\030\003 \001(\t\022\014\n\004city\030\004 \001(\t\022\021\n\ttelephone\030\005 \001(\t" +
-      "\">\n\rProtoPetVisit\022\n\n\002id\030\001 \001(\005\022\014\n\004date\030\002 " +
-      "\001(\t\022\023\n\013description\030\003 \001(\t\"\276\001\n\nProtoOwner\022" +
-      "\n\n\002id\030\001 \001(\005\022\022\n\nfirst_name\030\002 \001(\t\022\021\n\tlast_" +
-      "name\030\003 \001(\t\022\017\n\007address\030\004 \001(\t\022\014\n\004city\030\005 \001(" +
-      "\t\022\021\n\ttelephone\030\006 \001(\t\022K\n\004pets\030\007 \003(\0132=.org" +
-      ".springframework.samples.petclinic.proto" +
-      "buf.ProtoOwnerPet\"Y\n\013ProtoOwners\022J\n\006owne" +
-      "rs\030\001 \003(\0132:.org.springframework.samples.p" +
-      "etclinic.protobuf.ProtoOwner\"O\n\rProtoOwn" +
-      "erPet\022\n\n\002id\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022\022\n\nbirth" +
-      "_date\030\003 \001(\t\022\020\n\010pet_type\030\004 \001(\t\")\n\024ProtoOw" +
-      "nerFindByName\022\021\n\tlast_name\030\001 \001(\t\"h\n\rProt" +
-      "oOwnerAdd\022\022\n\nfirst_name\030\002 \001(\t\022\021\n\tlast_na" +
-      "me\030\003 \001(\t\022\017\n\007address\030\004 \001(\t\022\014\n\004city\030\005 \001(\t\022" +
-      "\021\n\ttelephone\030\006 \001(\t\"I\n\020ProtoOwnerAddPet\022\014" +
-      "\n\004name\030\001 \001(\t\022\022\n\nbirth_date\030\002 \001(\t\022\023\n\013pet_" +
-      "type_id\030\003 \001(\005\"C\n\022ProtoOwnerAddVisit\022\022\n\nv" +
-      "isit_date\030\003 \001(\t\022\031\n\021visit_description\030\004 \001" +
-      "(\t\"*\n\016ProtoSpecialty\022\n\n\002id\030\001 \001(\005\022\014\n\004name" +
-      "\030\002 \001(\t\"g\n\020ProtoSpecialties\022S\n\013specialtie" +
-      "s\030\001 \003(\0132>.org.springframework.samples.pe" +
-      "tclinic.protobuf.ProtoSpecialty\"!\n\021Proto" +
-      "SpecialtyAdd\022\014\n\004name\030\001 \001(\t\"\222\001\n\010ProtoVet\022" +
-      "\n\n\002id\030\001 \001(\005\022\022\n\nfirst_name\030\002 \001(\t\022\021\n\tlast_" +
-      "name\030\003 \001(\t\022S\n\013specialties\030\004 \003(\0132>.org.sp" +
-      "ringframework.samples.petclinic.protobuf" +
-      ".ProtoSpecialty\"S\n\tProtoVets\022F\n\004vets\030\001 \003" +
-      "(\01328.org.springframework.samples.petclin" +
-      "ic.protobuf.ProtoVet\"\211\001\n\013ProtoVetAdd\022\022\n\n" +
-      "first_name\030\001 \001(\t\022\021\n\tlast_name\030\002 \001(\t\022S\n\013s" +
-      "pecialties\030\003 \003(\0132>.org.springframework.s" +
+      "e\030\001 \001(\t\"\345\001\n\010ProtoPet\022\n\n\002id\030\001 \001(\005\022\014\n\004name" +
+      "\030\002 \001(\t\022\022\n\nbirth_date\030\003 \001(\t\022J\n\004type\030\004 \001(\013" +
+      "2<.org.springframework.samples.petclinic" +
+      ".protobuf.ProtoPetType\022\020\n\010owner_id\030\005 \001(\005" +
+      "\022M\n\006visits\030\006 \003(\0132=.org.springframework.s" +
+      "amples.petclinic.protobuf.ProtoPetVisit\"" +
+      "S\n\tProtoPets\022F\n\004pets\030\001 \003(\01328.org.springf" +
+      "ramework.samples.petclinic.protobuf.Prot" +
+      "oPet\"V\n\013ProtoPetAdd\022\014\n\004name\030\001 \001(\t\022\022\n\nbir" +
+      "th_date\030\002 \001(\t\022\023\n\013pet_type_id\030\003 \001(\005\022\020\n\010ow" +
+      "ner_id\030\004 \001(\005\"h\n\rProtoPetOwner\022\022\n\nfirst_n" +
+      "ame\030\001 \001(\t\022\021\n\tlast_name\030\002 \001(\t\022\017\n\007address\030" +
+      "\003 \001(\t\022\014\n\004city\030\004 \001(\t\022\021\n\ttelephone\030\005 \001(\t\"N" +
+      "\n\rProtoPetVisit\022\n\n\002id\030\001 \001(\005\022\014\n\004date\030\002 \001(" +
+      "\t\022\023\n\013description\030\003 \001(\t\022\016\n\006pet_id\030\004 \001(\005\"\271" +
+      "\001\n\nProtoOwner\022\n\n\002id\030\001 \001(\005\022\022\n\nfirst_name\030" +
+      "\002 \001(\t\022\021\n\tlast_name\030\003 \001(\t\022\017\n\007address\030\004 \001(" +
+      "\t\022\014\n\004city\030\005 \001(\t\022\021\n\ttelephone\030\006 \001(\t\022F\n\004pe" +
+      "ts\030\007 \003(\01328.org.springframework.samples.p" +
+      "etclinic.protobuf.ProtoPet\"Y\n\013ProtoOwner" +
+      "s\022J\n\006owners\030\001 \003(\0132:.org.springframework." +
+      "samples.petclinic.protobuf.ProtoOwner\"O\n" +
+      "\rProtoOwnerPet\022\n\n\002id\030\001 \001(\005\022\014\n\004name\030\002 \001(\t" +
+      "\022\022\n\nbirth_date\030\003 \001(\t\022\020\n\010pet_type\030\004 \001(\t\")" +
+      "\n\024ProtoOwnerFindByName\022\021\n\tlast_name\030\001 \001(" +
+      "\t\"h\n\rProtoOwnerAdd\022\022\n\nfirst_name\030\002 \001(\t\022\021" +
+      "\n\tlast_name\030\003 \001(\t\022\017\n\007address\030\004 \001(\t\022\014\n\004ci" +
+      "ty\030\005 \001(\t\022\021\n\ttelephone\030\006 \001(\t\"\200\001\n\020ProtoOwn" +
+      "erAddPet\022\014\n\004name\030\001 \001(\t\022\022\n\nbirth_date\030\002 \001" +
+      "(\t\022J\n\004type\030\003 \001(\0132<.org.springframework.s" +
+      "amples.petclinic.protobuf.ProtoPetType\"C" +
+      "\n\022ProtoOwnerAddVisit\022\022\n\nvisit_date\030\003 \001(\t" +
+      "\022\031\n\021visit_description\030\004 \001(\t\"*\n\016ProtoSpec" +
+      "ialty\022\n\n\002id\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\"g\n\020Proto" +
+      "Specialties\022S\n\013specialties\030\001 \003(\0132>.org.s" +
+      "pringframework.samples.petclinic.protobu" +
+      "f.ProtoSpecialty\"!\n\021ProtoSpecialtyAdd\022\014\n" +
+      "\004name\030\001 \001(\t\"\222\001\n\010ProtoVet\022\n\n\002id\030\001 \001(\005\022\022\n\n" +
+      "first_name\030\002 \001(\t\022\021\n\tlast_name\030\003 \001(\t\022S\n\013s" +
+      "pecialties\030\004 \003(\0132>.org.springframework.s" +
       "amples.petclinic.protobuf.ProtoSpecialty" +
-      "\"M\n\nProtoVisit\022\n\n\002id\030\001 \001(\005\022\014\n\004date\030\002 \001(\t" +
-      "\022\023\n\013description\030\003 \001(\t\022\020\n\010pet_name\030\004 \001(\t\"" +
-      "Y\n\013ProtoVisits\022J\n\006visits\030\001 \003(\0132:.org.spr" +
-      "ingframework.samples.petclinic.protobuf." +
-      "ProtoVisit\"B\n\rProtoVisitAdd\022\014\n\004date\030\001 \001(" +
-      "\t\022\023\n\013description\030\002 \001(\t\022\016\n\006pet_id\030\003 \001(\005B2" +
-      "\n.org.springframework.samples.petclinic." +
-      "protobufP\001b\006proto3"
+      "\"S\n\tProtoVets\022F\n\004vets\030\001 \003(\01328.org.spring" +
+      "framework.samples.petclinic.protobuf.Pro" +
+      "toVet\"\211\001\n\013ProtoVetAdd\022\022\n\nfirst_name\030\001 \001(" +
+      "\t\022\021\n\tlast_name\030\002 \001(\t\022S\n\013specialties\030\003 \003(" +
+      "\0132>.org.springframework.samples.petclini" +
+      "c.protobuf.ProtoSpecialty\"K\n\nProtoVisit\022" +
+      "\n\n\002id\030\001 \001(\005\022\014\n\004date\030\002 \001(\t\022\023\n\013description" +
+      "\030\003 \001(\t\022\016\n\006pet_id\030\004 \001(\005\"Y\n\013ProtoVisits\022J\n" +
+      "\006visits\030\001 \003(\0132:.org.springframework.samp" +
+      "les.petclinic.protobuf.ProtoVisit\"2\n\rPro" +
+      "toVisitAdd\022\014\n\004date\030\001 \001(\t\022\023\n\013description\030" +
+      "\002 \001(\tB2\n.org.springframework.samples.pet" +
+      "clinic.protobufP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -231,7 +232,7 @@ public final class Petclinic {
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoPet_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_org_springframework_samples_petclinic_protobuf_ProtoPet_descriptor,
-        new java.lang.String[] { "Id", "Name", "BirthDate", "PetType", "Owner", "Visits", });
+        new java.lang.String[] { "Id", "Name", "BirthDate", "Type", "OwnerId", "Visits", });
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoPets_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoPets_fieldAccessorTable = new
@@ -255,7 +256,7 @@ public final class Petclinic {
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoPetVisit_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_org_springframework_samples_petclinic_protobuf_ProtoPetVisit_descriptor,
-        new java.lang.String[] { "Id", "Date", "Description", });
+        new java.lang.String[] { "Id", "Date", "Description", "PetId", });
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoOwner_descriptor =
       getDescriptor().getMessageTypes().get(8);
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoOwner_fieldAccessorTable = new
@@ -291,7 +292,7 @@ public final class Petclinic {
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoOwnerAddPet_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_org_springframework_samples_petclinic_protobuf_ProtoOwnerAddPet_descriptor,
-        new java.lang.String[] { "Name", "BirthDate", "PetTypeId", });
+        new java.lang.String[] { "Name", "BirthDate", "Type", });
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoOwnerAddVisit_descriptor =
       getDescriptor().getMessageTypes().get(14);
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoOwnerAddVisit_fieldAccessorTable = new
@@ -339,7 +340,7 @@ public final class Petclinic {
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoVisit_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_org_springframework_samples_petclinic_protobuf_ProtoVisit_descriptor,
-        new java.lang.String[] { "Id", "Date", "Description", "PetName", });
+        new java.lang.String[] { "Id", "Date", "Description", "PetId", });
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoVisits_descriptor =
       getDescriptor().getMessageTypes().get(22);
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoVisits_fieldAccessorTable = new
@@ -351,7 +352,7 @@ public final class Petclinic {
     internal_static_org_springframework_samples_petclinic_protobuf_ProtoVisitAdd_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_org_springframework_samples_petclinic_protobuf_ProtoVisitAdd_descriptor,
-        new java.lang.String[] { "Date", "Description", "PetId", });
+        new java.lang.String[] { "Date", "Description", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

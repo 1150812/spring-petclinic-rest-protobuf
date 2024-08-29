@@ -130,6 +130,17 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int PET_ID_FIELD_NUMBER = 4;
+  private int petId_ = 0;
+  /**
+   * <code>int32 pet_id = 4;</code>
+   * @return The petId.
+   */
+  @java.lang.Override
+  public int getPetId() {
+    return petId_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -153,6 +164,9 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(description_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, description_);
     }
+    if (petId_ != 0) {
+      output.writeInt32(4, petId_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -171,6 +185,10 @@ private static final long serialVersionUID = 0L;
     }
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(description_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, description_);
+    }
+    if (petId_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(4, petId_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -193,6 +211,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getDate())) return false;
     if (!getDescription()
         .equals(other.getDescription())) return false;
+    if (getPetId()
+        != other.getPetId()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -210,6 +230,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getDate().hashCode();
     hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
     hash = (53 * hash) + getDescription().hashCode();
+    hash = (37 * hash) + PET_ID_FIELD_NUMBER;
+    hash = (53 * hash) + getPetId();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -344,6 +366,7 @@ private static final long serialVersionUID = 0L;
       id_ = 0;
       date_ = "";
       description_ = "";
+      petId_ = 0;
       return this;
     }
 
@@ -385,6 +408,9 @@ private static final long serialVersionUID = 0L;
       }
       if (((from_bitField0_ & 0x00000004) != 0)) {
         result.description_ = description_;
+      }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.petId_ = petId_;
       }
     }
 
@@ -445,6 +471,9 @@ private static final long serialVersionUID = 0L;
         bitField0_ |= 0x00000004;
         onChanged();
       }
+      if (other.getPetId() != 0) {
+        setPetId(other.getPetId());
+      }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
@@ -486,6 +515,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000004;
               break;
             } // case 26
+            case 32: {
+              petId_ = input.readInt32();
+              bitField0_ |= 0x00000008;
+              break;
+            } // case 32
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -675,6 +709,38 @@ private static final long serialVersionUID = 0L;
       checkByteStringIsUtf8(value);
       description_ = value;
       bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+
+    private int petId_ ;
+    /**
+     * <code>int32 pet_id = 4;</code>
+     * @return The petId.
+     */
+    @java.lang.Override
+    public int getPetId() {
+      return petId_;
+    }
+    /**
+     * <code>int32 pet_id = 4;</code>
+     * @param value The petId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setPetId(int value) {
+
+      petId_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 pet_id = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearPetId() {
+      bitField0_ = (bitField0_ & ~0x00000008);
+      petId_ = 0;
       onChanged();
       return this;
     }

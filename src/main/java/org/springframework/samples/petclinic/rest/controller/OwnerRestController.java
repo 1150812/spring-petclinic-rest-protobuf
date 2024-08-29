@@ -47,30 +47,36 @@ public class OwnerRestController {
         this.clinicService = clinicService;
     }
 
-    @RequestMapping("listOwners")
-    public ResponseEntity<ProtoOwners> listOwners(@RequestBody ProtoOwnerFindByName lastName) {
+    @GetMapping("owners")
+    public ResponseEntity<ProtoOwners> listOwners() {
+
         Collection<Owner> owners;
-        if (!lastName.getLastName().equals("")) {
-            owners = this.clinicService.findOwnerByLastName(lastName.getLastName());
-        } else {
-            owners = this.clinicService.findAllOwners();
-        }
-        if (owners.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
+        owners = this.clinicService.findAllOwners();
 
         List<ProtoOwner> collection = new ArrayList<>();
 
         for (Owner owner : owners) {
 
-            List<ProtoOwnerPet> collection2 = new ArrayList<>();
+            List<ProtoPet> collection2 = new ArrayList<>();
 
             for (Pet p : owner.getPets()) {
 
-                ProtoOwnerPet protoOwnerPet = ProtoOwnerPet.newBuilder().setId(p.getId()).setName(p.getName()).setPetType(p.getType().getName()).
-                    setBirthDate((p.getBirthDate().toString())).build();
+                ProtoPetType protoPetType = ProtoPetType.newBuilder().setId(p.getType().getId()).setName(p.getType().getName()).build();
 
-                collection2.add(protoOwnerPet);
+                List<ProtoPetVisit> collection3 = new ArrayList<>();
+
+                for (Visit v: p.getVisits()) {
+                    ProtoPetVisit protoVisit = ProtoPetVisit.newBuilder().setId(v.getId()).setDate(v.getDate().toString()).
+                        setDescription(v.getDescription()).build();
+
+                    collection3.add(protoVisit);
+                }
+
+                ProtoPet protoPet = ProtoPet.newBuilder().setId(p.getId()).setName(p.getName()).setType(protoPetType).
+                    setBirthDate((p.getBirthDate().toString())).setOwnerId(p.getOwner().getId()).addAllVisits(collection3).build();
+
+                collection2.add(protoPet);
 
             }
 
@@ -87,21 +93,33 @@ public class OwnerRestController {
 
     }
 
-    @RequestMapping("getOwner/{ownerId}")
+    @GetMapping("owners/{ownerId}")
     public ResponseEntity<ProtoOwner> getOwner(@PathVariable("ownerId") Integer ownerId) {
+
         Owner owner = this.clinicService.findOwnerById(ownerId);
         if (owner == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        List<ProtoOwnerPet> collection = new ArrayList<>();
+        List<ProtoPet> collection = new ArrayList<>();
 
         for (Pet p : owner.getPets()) {
 
-            ProtoOwnerPet protoOwnerPet = ProtoOwnerPet.newBuilder().setId(p.getId()).setName(p.getName()).setPetType(p.getType().getName()).
-                setBirthDate((p.getBirthDate().toString())).build();
+            ProtoPetType protoPetType = ProtoPetType.newBuilder().setId(p.getType().getId()).setName(p.getType().getName()).build();
 
-            collection.add(protoOwnerPet);
+            List<ProtoPetVisit> collection2 = new ArrayList<>();
+
+            for (Visit v: p.getVisits()) {
+                ProtoPetVisit protoVisit = ProtoPetVisit.newBuilder().setId(v.getId()).setDate(v.getDate().toString()).
+                    setDescription(v.getDescription()).build();
+
+                collection2.add(protoVisit);
+            }
+
+            ProtoPet protoPet = ProtoPet.newBuilder().setId(p.getId()).setName(p.getName()).setType(protoPetType).
+                setBirthDate((p.getBirthDate().toString())).setOwnerId(p.getOwner().getId()).addAllVisits(collection2).build();
+
+            collection.add(protoPet);
 
         }
 
@@ -110,9 +128,10 @@ public class OwnerRestController {
             addAllPets(collection).build();
 
         return new ResponseEntity<>(pOwner, HttpStatus.OK);
+
     }
 
-    @PostMapping (value = "addOwner", consumes = "application/x-protobuf", produces = "application/x-protobuf")
+    @PostMapping ("owners")
     public ResponseEntity<ProtoOwner> addOwner(@RequestBody ProtoOwner protoOwner) {
 
         Owner owner = new Owner();
@@ -132,9 +151,9 @@ public class OwnerRestController {
 
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
-    @PutMapping("updateOwner/{ownerId}")
+    @PutMapping("owners/{ownerId}")
     public ResponseEntity<ProtoOwner> updateOwner(@PathVariable("ownerId") Integer ownerId, @RequestBody ProtoOwnerAdd protoAddOwner) {
+
         Owner currentOwner = this.clinicService.findOwnerById(ownerId);
         if (currentOwner == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -146,15 +165,11 @@ public class OwnerRestController {
         currentOwner.setTelephone(protoAddOwner.getTelephone());
         this.clinicService.saveOwner(currentOwner);
 
-        ProtoOwner pOwner = ProtoOwner.newBuilder().setId(currentOwner.getId()).setFirstName(currentOwner.getFirstName()).
-            setLastName(currentOwner.getLastName()).setAddress(currentOwner.getAddress()).setCity(currentOwner.getCity()).
-            setTelephone(currentOwner.getTelephone()).build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-        return new ResponseEntity<>(pOwner, HttpStatus.OK);
     }
 
-    @Transactional
-    @DeleteMapping("deleteOwner/{ownerId}")
+    @DeleteMapping("owners/{ownerId}")
     public ResponseEntity<ProtoOwner> deleteOwner(@PathVariable("ownerId") Integer ownerId) {
         Owner owner = this.clinicService.findOwnerById(ownerId);
         if (owner == null) {
@@ -164,13 +179,13 @@ public class OwnerRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping (value = "addPetToOwner/{ownerId}", consumes = "application/x-protobuf", produces = "application/x-protobuf")
+    @PostMapping ("owners/{ownerId}/pets")
     public ResponseEntity<ProtoOwnerPet> addPetToOwner(@PathVariable("ownerId") Integer ownerId, @RequestBody ProtoOwnerAddPet petProto) {
 
         Pet pet = new Pet();
         pet.setName(petProto.getName());
         pet.setBirthDate(LocalDate.parse(petProto.getBirthDate()));
-        pet.setType(this.clinicService.findPetTypeById(petProto.getPetTypeId()));
+        pet.setType(this.clinicService.findPetTypeById(petProto.getType().getId()));
         pet.setOwner(this.clinicService.findOwnerById(ownerId));
         this.clinicService.savePet(pet);
 
@@ -181,7 +196,7 @@ public class OwnerRestController {
 
     }
 
-    @PostMapping (value = "addVisitToOwner/{petId}", consumes = "application/x-protobuf", produces = "application/x-protobuf")
+    @PostMapping ("owners/{ownerId}/pets/{petId}/visits")
     public ResponseEntity<ProtoPetVisit> addVisitToOwner(@PathVariable("petId") Integer petId, @RequestBody ProtoOwnerAddVisit protoOwnerAddVisit) {
 
         Visit visit = new Visit();
@@ -190,14 +205,14 @@ public class OwnerRestController {
         visit.setPet(this.clinicService.findPetById(petId));
 
         this.clinicService.saveVisit(visit);
-        ProtoPetVisit vProto = ProtoPetVisit.newBuilder().setId(visit.getId()).setDate(visit.getDate().toString()).setDescription(visit.getDescription()).build();
+        ProtoPetVisit vProto = ProtoPetVisit.newBuilder().setId(visit.getId()).setDate(visit.getDate().toString()).setDescription(visit.getDescription()).
+        setPetId(petId).build();
 
         return new ResponseEntity<>(vProto, HttpStatus.CREATED);
 
     }
 
-
-    @RequestMapping("getOwnersPet/{ownerId}/{petId}")
+    @GetMapping("owners/{ownerId}/{petId}")
     public ResponseEntity<ProtoOwnerPet> getOwnersPet(@PathVariable("ownerId") Integer ownerId, @PathVariable("petId") Integer petId) {
 
         Owner owner = this.clinicService.findOwnerById(ownerId);
@@ -211,18 +226,8 @@ public class OwnerRestController {
 
             return new ResponseEntity<>(protoOwnerPet, HttpStatus.OK);
 
-//            if (!p.getOwner().equals(owner)) {
-//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//            } else {
-//
-//                ProtoOwnerPet protoOwnerPet = ProtoOwnerPet.newBuilder().setId(p.getId()).setName(p.getName()).setPetType(p.getType().getName()).
-//                    setBirthDate((p.getBirthDate().toString())).build();
-//
-//                return new ResponseEntity<>(protoOwnerPet, HttpStatus.OK);
-//
-//            }
-
         }
+
     }
 
 }

@@ -41,8 +41,7 @@ public class VisitRestController {
         this.clinicService = clinicService;
     }
 
-
-    @RequestMapping("listVisits")
+    @GetMapping("visits")
     public ResponseEntity<ProtoVisits> listVisits() {
         List<Visit> visits = new ArrayList<>(this.clinicService.findAllVisits());
         if (visits.isEmpty()) {
@@ -53,7 +52,7 @@ public class VisitRestController {
 
         for (Visit v: visits) {
             ProtoVisit protoVisit = ProtoVisit.newBuilder().setId(v.getId()).setDate(v.getDate().toString()).
-                setDescription(v.getDescription()).setPetName(v.getPet().getName()).build();
+                setDescription(v.getDescription()).setPetId(v.getPet().getId()).build();
 
             collection.add(protoVisit);
         }
@@ -64,7 +63,7 @@ public class VisitRestController {
 
     }
 
-    @RequestMapping("getVisit/{visitId}")
+    @GetMapping("visits/{visitId}")
     public ResponseEntity<ProtoVisit> getVisit(@PathVariable ("visitId") Integer visitId) {
         Visit v = this.clinicService.findVisitById(visitId);
         if (v == null) {
@@ -72,30 +71,30 @@ public class VisitRestController {
         }
 
         ProtoVisit protoVisit = ProtoVisit.newBuilder().setId(v.getId()).setDate(v.getDate().toString()).
-            setDescription(v.getDescription()).setPetName(v.getPet().getName()).build();
+            setDescription(v.getDescription()).setPetId(v.getPet().getId()).build();
 
         return new ResponseEntity<>(protoVisit, HttpStatus.OK);
 
     }
 
-    @PostMapping (value = "addVisit", consumes = "application/x-protobuf", produces = "application/x-protobuf")
-    public ResponseEntity<ProtoVisit> addVisit(@RequestBody ProtoVisitAdd protoVisitAdd) {
+//    @PostMapping ("visits")
+//    public ResponseEntity<ProtoVisit> addVisit(@RequestBody ProtoVisitAdd protoVisitAdd) {
+//
+//        Visit visit = new Visit();
+//
+//        visit.setDate(LocalDate.parse(protoVisitAdd.getDate()));
+//        visit.setDescription(protoVisitAdd.getDescription());
+//        visit.setPet(this.clinicService.findPetById(protoVisitAdd.getPetId()));
+//        this.clinicService.saveVisit(visit);
+//
+//        ProtoVisit protoVisit = ProtoVisit.newBuilder().setId(visit.getId()).setDate(visit.getDate().toString()).
+//            setDescription(visit.getDescription()).setPetName(visit.getPet().getName()).build();
+//
+//        return new ResponseEntity<>(protoVisit, HttpStatus.CREATED);
+//
+//    }
 
-        Visit visit = new Visit();
-
-        visit.setDate(LocalDate.parse(protoVisitAdd.getDate()));
-        visit.setDescription(protoVisitAdd.getDescription());
-        visit.setPet(this.clinicService.findPetById(protoVisitAdd.getPetId()));
-        this.clinicService.saveVisit(visit);
-
-        ProtoVisit protoVisit = ProtoVisit.newBuilder().setId(visit.getId()).setDate(visit.getDate().toString()).
-            setDescription(visit.getDescription()).setPetName(visit.getPet().getName()).build();
-
-        return new ResponseEntity<>(protoVisit, HttpStatus.CREATED);
-
-    }
-
-    @PutMapping (value = "updateVisit/{visitId}", consumes = "application/x-protobuf", produces = "application/x-protobuf")
+    @PutMapping ("visits/{visitId}")
     public ResponseEntity<ProtoVisit> updateVisit(@PathVariable("visitId") Integer visitId, @RequestBody ProtoVisitAdd protoVisitAdd) {
 
         Visit currentVisit = this.clinicService.findVisitById(visitId);
@@ -104,23 +103,22 @@ public class VisitRestController {
         }
         currentVisit.setDate(LocalDate.parse(protoVisitAdd.getDate()));
         currentVisit.setDescription(protoVisitAdd.getDescription());
-        currentVisit.setPet(this.clinicService.findPetById(protoVisitAdd.getPetId()));
         this.clinicService.saveVisit(currentVisit);
 
-        ProtoVisit protoVisit = ProtoVisit.newBuilder().setId(currentVisit.getId()).setDate(currentVisit.getDate().toString()).
-            setDescription(currentVisit.getDescription()).setPetName(currentVisit.getPet().getName()).build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-        return new ResponseEntity<>(protoVisit, HttpStatus.OK);
     }
 
-    @DeleteMapping("deleteVisit/{visitId}")
+    @DeleteMapping("visits/{visitId}")
     public ResponseEntity<ProtoVisit> deleteVisit(@PathVariable ("visitId") Integer visitId) {
+
         Visit visit = this.clinicService.findVisitById(visitId);
         if (visit == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         this.clinicService.deleteVisit(visit);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 
 }

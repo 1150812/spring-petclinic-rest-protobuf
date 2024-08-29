@@ -33,8 +33,17 @@ public interface ProtoOwnerAddPetOrBuilder extends
       getBirthDateBytes();
 
   /**
-   * <code>int32 pet_type_id = 3;</code>
-   * @return The petTypeId.
+   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 3;</code>
+   * @return Whether the type field is set.
    */
-  int getPetTypeId();
+  boolean hasType();
+  /**
+   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 3;</code>
+   * @return The type.
+   */
+  org.springframework.samples.petclinic.protobuf.ProtoPetType getType();
+  /**
+   * <code>.org.springframework.samples.petclinic.protobuf.ProtoPetType type = 3;</code>
+   */
+  org.springframework.samples.petclinic.protobuf.ProtoPetTypeOrBuilder getTypeOrBuilder();
 }

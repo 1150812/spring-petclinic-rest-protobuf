@@ -37,8 +37,9 @@ public class PetTypeRestController {
         this.clinicService = clinicService;
     }
 
-    @RequestMapping("listPetTypes")
+    @GetMapping("pettypes")
     public ResponseEntity<ProtoPetTypes> listPetTypes() {
+
         List<PetType> petTypes = new ArrayList<>(this.clinicService.findAllPetTypes());
         if (petTypes.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -57,8 +58,9 @@ public class PetTypeRestController {
 
     }
 
-    @RequestMapping("getPetType/{petTypeId}")
+    @GetMapping("pettypes/{petTypeId}")
     public ResponseEntity<ProtoPetType> getPetType(@PathVariable("petTypeId") Integer petTypeId) {
+
         PetType petType = this.clinicService.findPetTypeById(petTypeId);
         if (petType == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -70,7 +72,7 @@ public class PetTypeRestController {
 
     }
 
-    @PostMapping (value = "addPetType")
+    @PostMapping (value = "pettypes")
     public ResponseEntity<ProtoPetType> addPetType(@RequestBody ProtoPetTypeAdd petTypeProto) {
 
         PetType petType = new PetType();
@@ -84,8 +86,8 @@ public class PetTypeRestController {
 
     }
 
-    @PutMapping("updatePetType/{petTypeId}")
-    public ResponseEntity<ProtoPetType> updatePetType(@PathVariable("petTypeId") Integer petTypeId, @RequestBody ProtoPetTypeAdd petTypeProto) {
+    @PutMapping("pettypes/{petTypeId}")
+    public ResponseEntity<ProtoPetType> updatePetType(@PathVariable("petTypeId") Integer petTypeId, @RequestBody ProtoPetType petTypeProto) {
 
         PetType currentPetType = this.clinicService.findPetTypeById(petTypeId);
         if (currentPetType == null) {
@@ -95,13 +97,11 @@ public class PetTypeRestController {
         currentPetType.setName(petTypeProto.getName());
         this.clinicService.savePetType(currentPetType);
 
-        ProtoPetType petTypeProtoResponse = ProtoPetType.newBuilder().setId(currentPetType.getId()).setName(currentPetType.getName()).build();
-
-        return new ResponseEntity<>(petTypeProtoResponse, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 
-    @DeleteMapping("deletePetType/{petTypeId}")
+    @DeleteMapping("pettypes/{petTypeId}")
     public ResponseEntity<ProtoPetType> deletePetType(@PathVariable("petTypeId") Integer petTypeId) {
 
         PetType petType = this.clinicService.findPetTypeById(petTypeId);
@@ -110,6 +110,7 @@ public class PetTypeRestController {
         }
         this.clinicService.deletePetType(petType);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 
 }

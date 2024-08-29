@@ -27,8 +27,8 @@ message ProtoPet {
   int32 id = 1;
   string name = 2;
   string birth_date = 3;
-  string pet_type = 4;
-  ProtoPetOwner owner = 5;
+  ProtoPetType type = 4;
+  int32 owner_id = 5;
   repeated ProtoPetVisit visits = 6;
 
 }
@@ -63,6 +63,7 @@ message ProtoPetVisit {
   int32 id = 1;
   string date = 2;
   string description = 3;
+  int32 pet_id = 4;
 
 }
 
@@ -74,7 +75,7 @@ message ProtoOwner {
   string address = 4;
   string city = 5;
   string telephone = 6;
-  repeated ProtoOwnerPet pets = 7;
+  repeated ProtoPet pets = 7;
 
 }
 
@@ -113,7 +114,7 @@ message ProtoOwnerAddPet {
 
   string name = 1;
   string birth_date = 2;
-  int32 pet_type_id = 3;
+  ProtoPetType type = 3;
 
 }
 
@@ -171,7 +172,7 @@ message ProtoVisit {
   int32 id = 1;
   string date = 2;
   string description = 3;
-  string pet_name = 4;
+  int32 pet_id = 4;
 
 }
 
@@ -185,6 +186,5 @@ message ProtoVisitAdd {
 
   string date = 1;
   string description = 2;
-  int32 pet_id = 3;
 
 }

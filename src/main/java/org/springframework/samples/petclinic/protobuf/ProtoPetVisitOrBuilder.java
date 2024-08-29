@@ -37,4 +37,10 @@ public interface ProtoPetVisitOrBuilder extends
    */
   com.google.protobuf.ByteString
       getDescriptionBytes();
+
+  /**
+   * <code>int32 pet_id = 4;</code>
+   * @return The petId.
+   */
+  int getPetId();
 }
